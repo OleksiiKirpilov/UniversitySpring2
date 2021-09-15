@@ -1,0 +1,43 @@
+<%@ include file="/WEB-INF/view/jspf/page.jspf" %>
+<%@ include file="/WEB-INF/view/jspf/taglib.jspf" %>
+
+<br>
+<br>
+
+<div class="menu">
+    <a href="viewAllFaculties">
+        <fmt:message key="header_jspf.anchor.faculties"/>
+    </a>
+    <c:choose>
+        <c:when test="${empty user}">
+            <a href="welcome">
+                <fmt:message key="header_jspf.anchor.login"/>
+            </a>
+            <a href="userRegistration">
+                <fmt:message key="header_jspf.anchor.register"/>
+            </a>
+        </c:when>
+        <c:otherwise>
+            <c:if test="${userRole eq 'admin'}">
+                <a href="viewAllSubjects">
+                    <fmt:message key="header_jspf.anchor.subjects"/>
+                </a>
+            </c:if>
+            <a href="viewProfile">
+                <fmt:message key="header_jspf.anchor.profile"/>
+            </a>
+            <a href="logout">
+                <fmt:message key="header_jspf.anchor.logout"/>
+            </a>
+        </c:otherwise>
+    </c:choose>
+    &nbsp;
+    <h:languageSelect lang="en"/>
+    <h:languageSelect lang="ru"/>
+</div>
+<br>
+<br>
+<br>
+<br>
+
+

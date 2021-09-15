@@ -1,0 +1,18 @@
+<%--======================== JSTL core tag library. ========================--%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%--======================== JSTL functions tag library. ===================--%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%--======================== Custom grades tag =============================--%>
+<%@ taglib uri="/WEB-INF/view/jspf/grades.tld" prefix="grades"%>
+<%--======================== Custom file tags for language selection, ======--%>
+<%--========================                 for datatables ================--%>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h"%>
+<%--======================== JSTL i18n tag library. ========================--%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+
+<%--======================== Switch ON i18n support ========================--%>
+<c:set var="language"
+	value="${not empty lang ? lang : pageContext.request.locale.language}"
+	scope="session" />
+<fmt:setLocale value="${language}" />
