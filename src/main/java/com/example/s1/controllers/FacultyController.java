@@ -39,6 +39,7 @@ public class FacultyController {
     @Autowired
     FacultyApplicantsRepository facultyApplicantsRepository;
 
+
     @GetMapping("/viewAllFaculties")
     public String list(HttpSession session, HttpServletRequest request) {
         Iterable<Faculty> faculties = facultyRepository.findAll();

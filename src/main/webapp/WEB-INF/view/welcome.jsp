@@ -14,7 +14,7 @@
     <c:when test="${empty user}">
 
         <div class="welcomeform">
-            <form id="login_form" action="welcome" method="POST">
+            <form id="login_form" action="login" method="POST">
                 <input type="hidden" name="command" value="login"/>
                 <div class="field">
                     <label>

@@ -10,7 +10,7 @@
     </a>
     <c:choose>
         <c:when test="${empty user}">
-            <a href="welcome">
+            <a href="login">
                 <fmt:message key="header_jspf.anchor.login"/>
             </a>
             <a href="userRegistration">

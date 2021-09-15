@@ -21,14 +21,16 @@ public class LogInController {
     @Autowired
     UserRepository repository;
 
-    @PostMapping("/welcome")
+    @GetMapping("/login")
+    public String loginGet() {
+        return "redirect:welcome";
+    }
+
+    @PostMapping("/login")
     public String login(@RequestParam String command,
                         @RequestParam String email,
                         @RequestParam String password,
                         HttpSession session) {
-        if (!"login".equals(command)) {
-            return "redirect:welcome";
-        }
         User user = repository.findUserByEmailAndPassword(email, password);
         LOG.trace("User found: {}", user);
         if (user == null) {
