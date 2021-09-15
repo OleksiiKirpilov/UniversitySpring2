@@ -17,14 +17,13 @@ public class LocaleController {
     @GetMapping("/setSessionLanguage")
     public String setSessionLanguage(@RequestParam(name = "lang", defaultValue = "en") String lang,
                                      HttpSession session, HttpServletRequest request) {
-        session.setAttribute("local", lang);
+        session.setAttribute("lang", lang);
         LOG.trace("Set session attribute 'lang' = {}", lang);
         String referer = request.getHeader("Referer");
         if (referer == null) {
             referer = "welcome";
         }
-        return "/welcome";
-        //return "redirect:" + referer;
+        return "redirect:" + referer;
     }
 
 }
