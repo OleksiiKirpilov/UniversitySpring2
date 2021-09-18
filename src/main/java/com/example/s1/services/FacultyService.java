@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -29,6 +31,8 @@ public class FacultyService {
     ApplicantRepository applicantRepository;
     @Autowired
     FacultyApplicantsRepository facultyApplicantsRepository;
+    @Autowired
+    GradeRepository gradeRepository;
 
     @Transactional
     public String updateFaculty(String oldFacultyName,
@@ -45,7 +49,7 @@ public class FacultyService {
         log.trace("Faculty record updated from: {}, to: {}", oldFacultyRecord, faculty);
         if (log.isTraceEnabled()) {
             log.trace("Get checked subjects before: {}", Arrays.toString(oldCheckedSubjectsIds));
-            log.trace("Get checked subjects after: {}",  Arrays.toString(newCheckedSubjectsIds));
+            log.trace("Get checked subjects after: {}", Arrays.toString(newCheckedSubjectsIds));
         }
         if (oldCheckedSubjectsIds == null) {
             if (newCheckedSubjectsIds == null) {
@@ -66,7 +70,7 @@ public class FacultyService {
         if (newCheckedSubjectsIds == null) {
             // if user unchecked all checkboxes and before there were some checked subjects
             log.trace("No subjects were checked for this faculty - all records that will be found will be deleted ");
-            facultySubjectsRepository. deleteAllByFacultyId(faculty.getId());
+            facultySubjectsRepository.deleteAllByFacultyId(faculty.getId());
             return Path.REDIRECT_TO_FACULTY + nameEn;
         }
         // if there were checked subjects and still are
@@ -136,6 +140,51 @@ public class FacultyService {
         return Path.FORWARD_FACULTY_VIEW_ADMIN;
     }
 
+    @Transactional
+    public String applyFacultyPost(HttpSession session,
+                                   @RequestParam(name = "id") Long facultyId,
+                                   HttpServletRequest request) {
+        log.trace("Start processing applying for faculty form");
+        String email = String.valueOf(session.getAttribute("user"));
+        User user = userRepository.findByEmail(email);
+        log.trace("Found user in database that wants to apply: {}", user);
+        Applicant applicant = applicantRepository.findByUserId(user.getId());
+        log.trace("Found applicant record in database for this user: {}", applicant);
+        FacultyApplicants newFacultyApplicant = new FacultyApplicants();
+        newFacultyApplicant.setFacultyId(facultyId);
+        newFacultyApplicant.setApplicantId(applicant.getId());
+        FacultyApplicants existingRecord =
+                facultyApplicantsRepository.findByFacultyIdAndApplicantId(facultyId, applicant.getId());
+        if (existingRecord != null) {
+            // user is already applied
+            log.trace("User: {} with Applicant record: {} already applied for faculty with id: {}",
+                    user, applicant, facultyId);
+            return Path.REDIRECT_TO_VIEW_ALL_FACULTIES;
+        }
+        log.trace("Start extracting data from request");
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        for (Map.Entry<String, String[]> e : parameterMap.entrySet()) {
+            String parameterName = e.getKey();
+            if (parameterName.endsWith("preliminary") || parameterName.endsWith("diploma")) {
+                String[] value = e.getValue();
+                int gradeValue = Integer.parseInt(value[0]);
+                String[] subjectIdAndExamType = parameterName.split("_");
+                Long subjectId = Long.parseLong(subjectIdAndExamType[0]);
+                String examType = subjectIdAndExamType[1];
+                Grade grade = new Grade(subjectId, applicant.getId(), gradeValue, examType);
+                log.trace("Create Grade transfer object: {}", grade);
+                gradeRepository.save(grade);
+                log.trace("Grade record was created in database: {}", grade);
+            }
+        }
+        log.trace("End extracting data from request");
+        log.trace("Create FacultyApplicants transfer object: {}", newFacultyApplicant);
+        facultyApplicantsRepository.save(newFacultyApplicant);
+        log.trace("FacultyApplicants record was created in database: {}", newFacultyApplicant);
+        log.trace("Finished processing applying for faculty form");
+        Faculty faculty = facultyRepository.findById(facultyId).orElse(null);
+        return Path.REDIRECT_TO_FACULTY + faculty.getNameEn();
+    }
 
     private boolean hasUserAppliedFacultyByEmail(Faculty faculty, String email) {
         User user = userRepository.findByEmail(email);

@@ -36,6 +36,10 @@ public class FacultyController {
     FacultyApplicantsRepository facultyApplicantsRepository;
     @Autowired
     FacultyService facultyService;
+    @Autowired
+    GradeRepository gradeRepository;
+    @Autowired
+    ReportSheetRepository reportSheetRepository;
 
     @GetMapping("/viewAllFaculties")
     public String list(HttpSession session, HttpServletRequest request) {
@@ -205,5 +209,65 @@ public class FacultyController {
 		return Path.REDIRECT_APPLICANT_PROFILE + applicant.getUserId();
     }
 
+    @GetMapping("/applyFaculty")
+    public String applyFaculty (@RequestParam(name = "name_en") String nameEn,
+                                ModelMap map) {
+        Faculty faculty = facultyRepository.findByNameEn(nameEn);
+        map.put(Fields.ENTITY_ID, faculty.getId());
+        log.trace("Set the request faculty attribute: 'id' = {}", faculty.getId());
+        map.put(Fields.FACULTY_NAME_RU, faculty.getNameRu());
+        log.trace("Set the request attribute: 'name' = {}", faculty.getNameRu());
+        map.put(Fields.FACULTY_NAME_EN, faculty.getNameEn());
+        log.trace("Set the request attribute: 'name_en' = {}", faculty.getNameEn());
+        map.put(Fields.FACULTY_TOTAL_PLACES, faculty.getTotalPlaces());
+        log.trace("Set the request attribute: 'total_places' = {}", faculty.getTotalPlaces());
+        map.put(Fields.FACULTY_BUDGET_PLACES, faculty.getBudgetPlaces());
+        log.trace("Set the request attribute: 'budget_places' = {}", faculty.getBudgetPlaces());
+        Iterable<Subject> facultySubjects = subjectRepository.findAllByFacultyId(faculty.getId());
+        map.put("facultySubjects", facultySubjects);
+        log.trace("Set attribute 'facultySubjects': {}", facultySubjects);
+        Iterable<Subject> allSubjects = subjectRepository.findAll();
+        map.put("allSubjects", allSubjects);
+        log.trace("Set attribute 'allSubjects': {}", allSubjects);
+        return Path.FORWARD_FACULTY_APPLY_USER;
+    }
+
+    @PostMapping("/applyFaculty")
+    public String applyFacultyPost(HttpSession session,
+                                   @RequestParam(name = "id") Long facultyId,
+                                   HttpServletRequest request) {
+        return facultyService.applyFacultyPost(session, facultyId, request);
+    }
+
+    @GetMapping("/createReport")
+    public String createReport(@RequestParam Long id,
+                               ModelMap map) {
+        List<ReportSheet> report = reportSheetRepository.findAllByFacultyId(id);
+        Faculty faculty = facultyRepository.findById(id).orElse(null);
+        if (faculty == null) {
+            log.error("Can not find faculty with id={}", id);
+            return Path.ERROR_PAGE;
+        }
+        int totalPlaces = faculty.getTotalPlaces();
+        int budgetPlaces = faculty.getBudgetPlaces();
+        for (int i = 0; i < report.size(); i++) {
+            ReportSheet sheet = report.get(i);
+            if ((i < totalPlaces) && !sheet.isBlocked()) {
+                sheet.setEntered(true);
+                sheet.setEnteredOnBudget(i < budgetPlaces);
+            } else {
+                sheet.setEntered(false);
+                sheet.setEnteredOnBudget(false);
+            }
+        }
+        map.put(Fields.FACULTY_NAME_RU, faculty.getNameRu());
+        log.trace("Set attribute 'name_ru': {}", faculty.getNameRu());
+        map.put(Fields.FACULTY_NAME_EN, faculty.getNameEn());
+        log.trace("Set attribute 'name_en': {}", faculty.getNameEn());
+        map.put("facultyReport", report);
+        log.trace("Set attribute 'facultyReport': {}", report);
+        return Path.FORWARD_REPORT_SHEET_VIEW;
+
+    }
 
 }

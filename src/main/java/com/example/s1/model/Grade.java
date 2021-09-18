@@ -23,4 +23,7 @@ public class Grade implements Serializable {
     private Long applicantId;
     private int grade;
     private String examType;
+
+    public Grade(Long subjectId, Long id, int gradeValue, String examType) {
+    }
 }

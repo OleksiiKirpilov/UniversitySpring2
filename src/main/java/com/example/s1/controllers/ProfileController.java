@@ -64,12 +64,12 @@ public class ProfileController {
         return Path.WELCOME_PAGE;
     }
 
-    @GetMapping("/addUser")
+    @GetMapping("/userRegistration")
     public String addUser() {
         return "/user/user_add_user";
     }
 
-    @PostMapping("/addUser")
+    @PostMapping("/userRegistration")
     public String addUserPost(@RequestParam String email, @RequestParam String password,
                               @RequestParam(name = "first_name") String firstName,
                               @RequestParam(name = "last_name") String lastName,
@@ -104,8 +104,7 @@ public class ProfileController {
     }
 
     @GetMapping("/viewProfile")
-    public String viewProfile(HttpSession session,
-                              ModelMap map) {
+    public String viewProfile(HttpSession session, ModelMap map) {
         String userEmail = String.valueOf(session.getAttribute("user"));
         User user = userRepository.findByEmail(userEmail);
         map.put("first_name", user.getFirstName());

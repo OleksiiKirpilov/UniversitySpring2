@@ -50,8 +50,9 @@
 		</p>
 
 		<p>
-			<a href="createReport?id=${id}"><fmt:message
-					key="faculty.view_jsp.button.create_report" /></a>
+			<a href="/createReport?id=${id}">
+				<fmt:message key="faculty.view_jsp.button.create_report" />
+			</a>
 		</p>
 		<br>
 		<form id="delete_faculty" action="deleteFaculty" method="POST">
