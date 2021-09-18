@@ -35,4 +35,11 @@ public class Applicant implements Serializable {
     @Column(nullable = false)
     private boolean blockedStatus;
 
+    public Applicant(String city, String district, String school, Long userId, boolean blockedStatus) {
+        this.city = city;
+        this.district = district;
+        this.school = school;
+        this.userId = userId;
+        this.blockedStatus = blockedStatus;
+    }
 }

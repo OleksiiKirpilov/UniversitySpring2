@@ -1,4 +1,4 @@
-package com.example.s1;
+package com.example.s1.services;
 
 import com.example.s1.model.*;
 import com.example.s1.repository.*;
@@ -119,12 +119,11 @@ public class FacultyService {
         if (Role.isUser(role)) {
             boolean applied = hasUserAppliedFacultyByEmail(facultyRecord, userEmail);
             map.put("alreadyApplied", applied ? "yes" : "no");
-            return "/user/user_view_faculty";
+            return Path.FORWARD_FACULTY_VIEW_USER;
         }
         if (!Role.isAdmin(role)) {
-            return "/user/user_view_faculty";
+            return Path.FORWARD_FACULTY_VIEW_USER;
         }
-
         Iterable<Applicant> applicants = applicantRepository.findAllByFacultyId(facultyRecord.getId());
         Map<Applicant, String> facultyApplicants = new TreeMap<>(Comparator.comparingLong(Applicant::getId));
         for (Applicant applicant : applicants) {
@@ -134,7 +133,7 @@ public class FacultyService {
         }
         map.put("facultyApplicants", facultyApplicants);
         log.trace("Set the request attribute: 'facultyApplicants' = {}", facultyApplicants);
-        return "/admin/admin_view_faculty";
+        return Path.FORWARD_FACULTY_VIEW_ADMIN;
     }
 
 

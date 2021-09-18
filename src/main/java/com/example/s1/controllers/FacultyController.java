@@ -1,6 +1,6 @@
 package com.example.s1.controllers;
 
-import com.example.s1.FacultyService;
+import com.example.s1.services.FacultyService;
 import com.example.s1.model.*;
 import com.example.s1.repository.*;
 import com.example.s1.utils.Fields;
@@ -13,7 +13,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -46,12 +45,12 @@ public class FacultyController {
         log.trace("Set the request attribute: 'faculties' = {}", faculties);
         String role = (String) session.getAttribute("userRole");
         if (role == null || Role.isUser(role)) {
-            return "/user/user_list_faculty";
+            return Path.FORWARD_FACULTY_VIEW_ALL_USER;
         }
         if (Role.isAdmin(role)) {
-            return "/admin/admin_list_faculty";
+            return Path.FORWARD_FACULTY_VIEW_ALL_ADMIN;
         }
-        return "redirect:/";
+        return Path.WELCOME_PAGE;
     }
 
     @GetMapping("/viewFaculty")
@@ -68,7 +67,7 @@ public class FacultyController {
         log.trace("All subjects found: {}", allSubjects);
         request.setAttribute("allSubjects", allSubjects);
         log.trace("Set request attribute 'allSubjects' = {}", allSubjects);
-        return "/admin/admin_add_faculty";
+        return Path.FORWARD_FACULTY_ADD_ADMIN;
     }
 
     @PostMapping("/addFaculty")

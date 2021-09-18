@@ -41,8 +41,17 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String lang;
 
-    private String salt;
+//    private String salt;
 //    private Boolean enabled;
 
+
+    public User(String email, String password, String firstName, String lastName, String role, String lang) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.lang = lang;
+    }
 }
 
