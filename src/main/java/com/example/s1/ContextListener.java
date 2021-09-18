@@ -1,10 +1,6 @@
 package com.example.s1;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletContext;
@@ -17,23 +13,21 @@ import java.util.StringTokenizer;
 /**
  * Context listener. Initializes i18n and CommandManager for future use.
  */
+@Slf4j
 @Component
 public class ContextListener implements ServletContextListener {
 
-    private static final Logger LOG = LogManager.getLogger(ContextListener.class);
-
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        LOG.trace("Servlet context initialization starts");
+        log.trace("Servlet context initialization starts");
         ServletContext servletContext = event.getServletContext();
         initI18N(servletContext);
-//        initCommandManager();
-        LOG.trace("Servlet context initialization finished");
+        log.trace("Servlet context initialization finished");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent event) {
-        LOG.trace("Servlet context destruction.");
+        log.trace("Servlet context destruction.");
     }
 
     /**
@@ -42,24 +36,21 @@ public class ContextListener implements ServletContextListener {
      * @param servletContext - gets init parameters from descriptor.
      */
     private void initI18N(ServletContext servletContext) {
-        LOG.debug("I18N subsystem initialization started");
+        log.debug("I18N subsystem initialization started");
         String localesValue = servletContext.getInitParameter("locales");
         if (localesValue == null || localesValue.isEmpty()) {
-            LOG.warn("'locales' init parameter is empty, the default encoding will be used");
+            log.warn("'locales' init parameter is empty, the default encoding will be used");
             localesValue = "en ru";
         }
-//        else {
-            List<String> locales = new ArrayList<>();
-            StringTokenizer st = new StringTokenizer(localesValue);
-            while (st.hasMoreTokens()) {
-                String localeName = st.nextToken();
-                locales.add(localeName);
-            }
-            LOG.debug("Application attribute set: 'locales' = {}", locales);
-            servletContext.setAttribute("locales", locales);
-//        }
-        LOG.debug("I18N subsystem initialization finished");
-
+        List<String> locales = new ArrayList<>();
+        StringTokenizer st = new StringTokenizer(localesValue);
+        while (st.hasMoreTokens()) {
+            String localeName = st.nextToken();
+            locales.add(localeName);
+        }
+        log.debug("Application attribute set: 'locales' = {}", locales);
+        servletContext.setAttribute("locales", locales);
+        log.debug("I18N subsystem initialization finished");
 
     }
 

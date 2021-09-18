@@ -1,10 +1,8 @@
 package com.example.s1.controllers;
 
-import com.example.s1.model.Role;
 import com.example.s1.model.User;
 import com.example.s1.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,10 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
+@Slf4j
 @Controller
 public class LogInController {
-
-    private static final Logger LOG = LoggerFactory.getLogger(LogInController.class);
 
     @Autowired
     UserRepository repository;
@@ -32,20 +29,20 @@ public class LogInController {
                         @RequestParam String password,
                         HttpSession session) {
         User user = repository.findUserByEmailAndPassword(email, password);
-        LOG.trace("User found: {}", user);
+        log.trace("User found: {}", user);
         if (user == null) {
 //            setErrorMessage(request, ERROR_CAN_NOT_FIND_USER);
-            LOG.error("errorMessage: Cannot find user with such login/password");
+            log.error("errorMessage: Cannot find user with such login/password");
             return "redirect:/";
         }
         session.setAttribute("user", user.getEmail());
-        LOG.trace("Set session attribute 'user' = {}", user.getEmail());
+        log.trace("Set session attribute 'user' = {}", user.getEmail());
         session.setAttribute("userRole", user.getRole());
-        LOG.trace("Set session attribute: 'userRole' = {}", user.getRole());
+        log.trace("Set session attribute: 'userRole' = {}", user.getRole());
         session.setAttribute("lang", user.getLang());
-        LOG.trace("Set session attribute 'lang' = {}", user.getLang());
-        LOG.info("User: {} logged as {}", user, user.getRole());
-        return  "redirect:viewAllFaculties";
+        log.trace("Set session attribute 'lang' = {}", user.getLang());
+        log.info("User: {} logged as {}", user, user.getRole());
+        return "redirect:viewAllFaculties";
     }
 
     @GetMapping("/logout")
@@ -53,7 +50,7 @@ public class LogInController {
         if (session != null) {
             session.invalidate();
         }
-        LOG.debug("Finished logout.");
+        log.debug("Finished logout.");
         return "redirect:/";
     }
 }

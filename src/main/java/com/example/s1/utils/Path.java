@@ -15,7 +15,7 @@ public final class Path {
 	public static final String REDIRECT_ADMIN_REGISTRATION_PAGE = "controller?command=adminRegistration";
 
 	public static final String REDIRECT_TO_PROFILE = "controller?command=viewProfile";
-	public static final String REDIRECT_TO_FACULTY = "controller?command=viewFaculty&name_en=";
+	public static final String REDIRECT_TO_FACULTY = "redirect:/viewFaculty&name_en=";
 	public static final String REDIRECT_TO_SUBJECT = "controller?command=viewSubject&name_en=";
 	public static final String REDIRECT_TO_VIEW_ALL_FACULTIES = "controller?command=viewAllFaculties";
 	public static final String REDIRECT_TO_VIEW_ALL_SUBJECTS = "controller?command=viewAllSubjects";
@@ -48,7 +48,7 @@ public final class Path {
 	public static final String REDIRECT_SUBJECT_EDIT_ADMIN = "controller?command=editSubject&name_en=";
 
 	public static final String FORWARD_APPLICANT_PROFILE = "/WEB-INF/view/admin/applicant/view.jsp";
-	public static final String REDIRECT_APPLICANT_PROFILE = "controller?command=viewApplicant&userId=";
+	public static final String REDIRECT_APPLICANT_PROFILE = "/viewApplicant&userId=";
 
 	public static final String FORWARD_REPORT_SHEET_VIEW = "/WEB-INF/view/admin/report/view.jsp";
 

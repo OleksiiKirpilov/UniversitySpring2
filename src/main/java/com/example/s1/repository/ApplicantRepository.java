@@ -12,4 +12,6 @@ public interface ApplicantRepository extends CrudRepository<Applicant, Long> {
             " ON faculty_applicants.applicant_id = applicants.id  WHERE faculty_applicants.faculty_id = ?",
             nativeQuery = true)
     Iterable<Applicant> findAllByFacultyId(Long id);
+
+
 }

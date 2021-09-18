@@ -1,51 +1,49 @@
 package com.example.s1.controllers;
 
+import com.example.s1.FacultyService;
 import com.example.s1.model.*;
 import com.example.s1.repository.*;
 import com.example.s1.utils.Fields;
 import com.example.s1.utils.InputValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.example.s1.utils.Path;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
+@Slf4j
 @Controller
 public class FacultyController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FacultyController.class);
-
     @Autowired
     FacultyRepository facultyRepository;
-
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     ApplicantRepository applicantRepository;
-
     @Autowired
     SubjectRepository subjectRepository;
-
     @Autowired
     FacultySubjectsRepository facultySubjectsRepository;
-
     @Autowired
     FacultyApplicantsRepository facultyApplicantsRepository;
-
+    @Autowired
+    FacultyService facultyService;
 
     @GetMapping("/viewAllFaculties")
     public String list(HttpSession session, HttpServletRequest request) {
         Iterable<Faculty> faculties = facultyRepository.findAll();
-        LOG.trace("Faculties records found: {}", faculties);
+        log.trace("Faculties records found: {}", faculties);
         request.setAttribute("faculties", faculties);
-        LOG.trace("Set the request attribute: 'faculties' = {}", faculties);
+        log.trace("Set the request attribute: 'faculties' = {}", faculties);
         String role = (String) session.getAttribute("userRole");
         if (role == null || Role.isUser(role)) {
             return "/user/user_list_faculty";
@@ -58,53 +56,18 @@ public class FacultyController {
 
     @GetMapping("/viewFaculty")
     public String view(@RequestParam(name = "name_en") String nameEn,
-                       HttpServletRequest request) {
-        LOG.trace("Faculty name to look for is equal to: '{}'", nameEn);
-        Faculty facultyRecord = facultyRepository.findByNameEn(nameEn);
-        LOG.trace("Faculty record found: {}", facultyRecord);
-        request.setAttribute(Fields.ENTITY_ID, facultyRecord.getId());
-        request.setAttribute(Fields.FACULTY_NAME_RU, facultyRecord.getNameRu());
-        request.setAttribute(Fields.FACULTY_NAME_EN, facultyRecord.getNameEn());
-        request.setAttribute(Fields.FACULTY_TOTAL_PLACES, facultyRecord.getTotalPlaces());
-        request.setAttribute(Fields.FACULTY_BUDGET_PLACES, facultyRecord.getBudgetPlaces());
-
-        Iterable<Subject> facultySubjects = subjectRepository.findAllByFacultyId(facultyRecord.getId());
-        request.setAttribute("facultySubjects", facultySubjects);
-        LOG.trace("Set the request attribute: 'facultySubjects' = {}", facultySubjects);
-
-        HttpSession session = request.getSession(false);
-        String role = (String) session.getAttribute("userRole");
-
-        if (role == null || Role.isUser(role)) {
-            String userEmail = String.valueOf(session.getAttribute("user"));
-            boolean applied = hasUserAppliedFacultyByEmail(facultyRecord, userEmail);
-            request.setAttribute("alreadyApplied", applied ? "yes" : "no");
-            return "/user/iser_view_faculty";
-        }
-        if (!Role.isAdmin(role)) {
-            return null;
-        }
-
-        Iterable<Applicant> applicants = applicantRepository.findAllByFacultyId(facultyRecord.getId());
-        Map<Applicant, String> facultyApplicants = new TreeMap<>(Comparator.comparingLong(Applicant::getId));
-        for (Applicant applicant : applicants) {
-            User user = userRepository.findById(applicant.getUserId()).orElse(null);
-            if (user == null) continue;
-            facultyApplicants.put(applicant, user.getFirstName() + " " + user.getLastName());
-        }
-        request.setAttribute("facultyApplicants", facultyApplicants);
-        LOG.trace("Set the request attribute: 'facultyApplicants' = {}", facultyApplicants);
-        return "/admin/admin_view_faculty";
+                       ModelMap map, HttpSession session) {
+        return facultyService.viewFaculty(nameEn, map, session);
     }
 
 
     @GetMapping("/addFaculty")
     public String preAdd(HttpServletRequest request) {
-        LOG.trace("Request for only showing (not adding) faculty/add.jsp");
+        log.trace("Request for only showing (not adding) faculty/add.jsp");
         Iterable<Subject> allSubjects = subjectRepository.findAll();
-        LOG.trace("All subjects found: {}", allSubjects);
+        log.trace("All subjects found: {}", allSubjects);
         request.setAttribute("allSubjects", allSubjects);
-        LOG.trace("Set request attribute 'allSubjects' = {}", allSubjects);
+        log.trace("Set request attribute 'allSubjects' = {}", allSubjects);
         return "/admin/admin_add_faculty";
     }
 
@@ -119,16 +82,16 @@ public class FacultyController {
                 nameEn, budgetPlaces, totalPlaces);
         if (!valid) {
             //setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
-            LOG.error("errorMessage: Not all fields are properly filled");
+            log.error("errorMessage: Not all fields are properly filled");
             return "redirect:addFaculty";
         }
-        LOG.trace("All fields are properly filled. Start updating database.");
+        log.trace("All fields are properly filled. Start updating database.");
         int total = Integer.parseInt(totalPlaces);
         int budget = Integer.parseInt(budgetPlaces);
         Faculty faculty = new Faculty(nameRu, nameEn, budget, total);
-        LOG.trace("Create faculty transfer object: {}", faculty);
+        log.trace("Create faculty transfer object: {}", faculty);
         facultyRepository.save(faculty);
-        LOG.trace("Create faculty record in database: {}", faculty);
+        log.trace("Create faculty record in database: {}", faculty);
         // only after creating a faculty record we can proceed with
         // adding faculty subjects
         if (subjects != null) {
@@ -137,16 +100,111 @@ public class FacultyController {
                 newFS.add(new FacultySubjects(id, faculty.getId()));
             }
             facultySubjectsRepository.saveAll(newFS);
-            LOG.trace("FacultySubjects record created in database: {}", newFS);
+            log.trace("FacultySubjects record created in database: {}", newFS);
         }
         return "redirect:viewFaculty?name_en=" + nameEn;
     }
 
-    private boolean hasUserAppliedFacultyByEmail(Faculty faculty, String email) {
-        User user = userRepository.findByEmail(email);
-        Applicant a = applicantRepository.findByUserId(user.getId());
-        FacultyApplicants fa =
-                facultyApplicantsRepository.findByFacultyIdAndApplicantId(faculty.getId(), a.getId());
-        return fa != null;
+    @PostMapping("/deleteFaculty")
+    public String deleteFaculty(@RequestParam Long id) {
+        Faculty facultyToDelete = facultyRepository.findById(id).orElse(null);
+        Iterable<Applicant> facultyApplicants = applicantRepository.findAllByFacultyId(id);
+        if (facultyApplicants != null) {
+//            setErrorMessage(request, ERROR_FACULTY_DEPENDS);
+            return Path.REDIRECT_TO_FACULTY + facultyToDelete.getNameEn();
+        }
+        facultyRepository.delete(facultyToDelete);
+        log.trace("Delete faculty record in database: {}", facultyToDelete);
+        return "redirect:/viewAllFaculties";
     }
+
+    @GetMapping("/editFaculty")
+    public String editFaculty(@RequestParam(name = "name_en") String nameEn,
+                                ModelMap map) {
+        Faculty faculty = facultyRepository.findByNameEn(nameEn);
+        map.put(Fields.FACULTY_NAME_RU, faculty.getNameRu());
+        log.trace("Set attribute 'name_ru': {}", faculty.getNameRu());
+        map.put(Fields.FACULTY_NAME_EN, faculty.getNameEn());
+        log.trace("Set attribute 'name_en': {}", faculty.getNameEn());
+        map.put(Fields.FACULTY_TOTAL_PLACES, faculty.getTotalPlaces());
+        log.trace("Set attribute 'total_places': {}", faculty.getTotalPlaces());
+        map.put(Fields.FACULTY_BUDGET_PLACES, faculty.getBudgetPlaces());
+        log.trace("Set attribute 'budget_places': {}", faculty.getBudgetPlaces());
+        Iterable<Subject> otherSubjects = subjectRepository.findAllByFacultyIdNotEquals(faculty.getId());
+        map.put("otherSubjects", otherSubjects);
+        log.trace("Set attribute 'otherSubjects': {}", otherSubjects);
+        Iterable<Subject> facultySubjects = subjectRepository.findAllByFacultyId(faculty.getId());
+        map.put("facultySubjects", facultySubjects);
+        log.trace("Set attribute 'facultySubjects': {}", facultySubjects);
+        return "/admin_edit_faculty";
+    }
+
+    @PostMapping("/editFaculty")
+    public String editFacultyPost(@RequestParam(name = "name_en") String nameEn,
+                                  @RequestParam(name = "name_ru") String nameRu,
+                                  @RequestParam(name = "total_places") String facultyTotalPlaces,
+                                  @RequestParam(name = "budget_places") String facultyBudgetPlaces,
+                                  @RequestParam(name = "oldName") String oldFacultyName,
+                                  @RequestParam(name = "oldCheckedSubjects") String[] oldCheckedSubjectsIds,
+                                  @RequestParam(name = "subjects") String[] newCheckedSubjectsIds
+                                  ) {
+        // if user changes faculty name we need to know the old one
+        // to update record in db
+        boolean valid = InputValidator.validateFacultyParameters(nameRu,
+                nameEn, facultyBudgetPlaces, facultyTotalPlaces);
+        if (!valid) {
+//            setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
+            log.error("errorMessage: Not all fields are properly filled");
+            return "redirect:/editFaculty&name_en=" + oldFacultyName;
+        }
+        // if it's true then let's start to update the db
+        return facultyService.updateFaculty(oldFacultyName, nameEn, nameRu, facultyTotalPlaces,
+                facultyBudgetPlaces, oldCheckedSubjectsIds, newCheckedSubjectsIds);
+    }
+
+    @GetMapping("/viewApplicant")
+    public String viewApplicant(@RequestParam Long userId,
+                                ModelMap map) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            log.error("Can not found user with id={}", userId);
+            return "redirect:/";
+        }
+        map.put("first_name", user.getFirstName());
+        log.trace("Set the request attribute: 'first_name' = {}", user.getFirstName());
+        map.put("last_name", user.getLastName());
+        log.trace("Set the request attribute: 'last_name' = {}", user.getLastName());
+        map.put("email", user.getEmail());
+        log.trace("Set the request attribute: 'email' = {}", user.getEmail());
+        map.put("role", user.getRole());
+        log.trace("Set the request attribute: 'role' = {}", user.getRole());
+        Applicant applicant = applicantRepository.findByUserId(user.getId());
+        map.put(Fields.ENTITY_ID, applicant.getId());
+        log.trace("Set the request attribute: 'id' = {}", applicant.getId());
+        map.put(Fields.APPLICANT_CITY, applicant.getCity());
+        log.trace("Set the request attribute: 'city' = {}", applicant.getCity());
+        map.put(Fields.APPLICANT_DISTRICT, applicant.getDistrict());
+        log.trace("Set the request attribute: 'district' = {}", applicant.getDistrict());
+        map.put(Fields.APPLICANT_SCHOOL, applicant.getSchool());
+        log.trace("Set the request attribute: 'school' = {}", applicant.getSchool());
+        map.put(Fields.APPLICANT_IS_BLOCKED, applicant.isBlockedStatus());
+        log.trace("Set the request attribute: 'isBlocked' = {}", applicant.isBlockedStatus());
+        return Path.FORWARD_APPLICANT_PROFILE;
+    }
+
+    @PostMapping("/viewApplicant")
+    public String viewApplicantPost(@RequestParam Long id) {
+		Applicant applicant = applicantRepository.findById(id).orElse(null);
+        if (applicant == null) {
+            return "redirect:/";
+        }
+		boolean updatedBlockedStatus = !applicant.isBlockedStatus();
+		applicant.setBlockedStatus(updatedBlockedStatus);
+		log.trace("Applicant with 'id' = {} and changed 'isBlocked' status = {}"
+				+ " record will be updated.", id, updatedBlockedStatus);
+		applicantRepository.save(applicant);
+		return Path.REDIRECT_APPLICANT_PROFILE + applicant.getUserId();
+    }
+
+
 }

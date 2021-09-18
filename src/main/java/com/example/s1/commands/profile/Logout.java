@@ -1,10 +1,9 @@
 package com.example.s1.commands.profile;
 
-import com.example.s1.utils.RequestType;
 import com.example.s1.commands.Command;
 import com.example.s1.utils.Path;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.example.s1.utils.RequestType;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,22 +14,22 @@ import java.io.IOException;
 /**
  * Invoked when user wants to log out from the system.
  */
+@Slf4j
 public class Logout extends Command {
 
-	private static final long serialVersionUID = -2785976616686657267L;
-	private static final Logger LOG = LogManager.getLogger(Logout.class);
+    private static final long serialVersionUID = -2785976616686657267L;
 
-	@Override
-	public String execute(HttpServletRequest request,
-			HttpServletResponse response, RequestType requestType)
-			throws IOException, ServletException {
-		LOG.debug("Start executing Command");
-		HttpSession session = request.getSession(false);
-		if (session != null) {
-			session.invalidate();
-		}
-		LOG.debug("Finished executing Command");
-		return Path.WELCOME_PAGE;
-	}
+    @Override
+    public String execute(HttpServletRequest request,
+                          HttpServletResponse response, RequestType requestType)
+            throws IOException, ServletException {
+        log.debug("Start executing Command");
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        log.debug("Finished executing Command");
+        return Path.WELCOME_PAGE;
+    }
 
 }

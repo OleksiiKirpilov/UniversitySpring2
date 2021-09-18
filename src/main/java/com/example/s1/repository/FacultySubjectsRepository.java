@@ -6,4 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface FacultySubjectsRepository extends CrudRepository<FacultySubjects, Long> {
 
+    void deleteAllByFacultyId(Long id);
+
 }
