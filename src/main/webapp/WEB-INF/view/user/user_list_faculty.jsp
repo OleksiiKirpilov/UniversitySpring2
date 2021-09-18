@@ -21,10 +21,9 @@
 			<c:forEach var="faculty" items="${faculties}">
 				<tr>
 					<td>
-						<a href="<c:url value="viewFaculty">
-							<c:param name="name_en" value="${faculty.nameEn}"/></c:url>">
-						<c:out value="${language eq 'ru' ? faculty.nameRu : faculty.nameEn}"></c:out>
-					</a>
+						<a href="<c:url value="viewFaculty"><c:param name="name_en" value="${faculty.nameEn}"/></c:url>">
+							<c:out value="${lang eq 'ru' ? faculty.nameRu : faculty.nameEn}"></c:out>
+						</a>
 					</td>
 					<td>
 						<c:out value="${faculty.totalPlaces}"></c:out>

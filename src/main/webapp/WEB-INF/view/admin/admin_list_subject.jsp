@@ -13,7 +13,7 @@
 		<ol>
 			<c:forEach var="subject" items="${allSubjects}">
 				<li>
-					<a href="<c:url value="/viewSubject"> <c:param name="name_en" value="${subject.nameEn}"/></c:url>">
+					<a href="<c:url value="viewSubject"> <c:param name="name_en" value="${subject.nameEn}"/></c:url>">
 						<c:out value="${lang eq 'ru' ? subject.nameRu : subject.nameEn}"></c:out>
 					</a>
 				</li>

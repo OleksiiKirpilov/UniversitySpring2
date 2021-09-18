@@ -16,7 +16,7 @@ public final class Path {
 
 	public static final String REDIRECT_TO_PROFILE = "controller?command=viewProfile";
 	public static final String REDIRECT_TO_FACULTY = "redirect:/viewFaculty&name_en=";
-	public static final String REDIRECT_TO_SUBJECT = "controller?command=viewSubject&name_en=";
+	public static final String REDIRECT_TO_SUBJECT = "redirect:/viewSubject&name_en=";
 	public static final String REDIRECT_TO_VIEW_ALL_FACULTIES = "controller?command=viewAllFaculties";
 	public static final String REDIRECT_TO_VIEW_ALL_SUBJECTS = "controller?command=viewAllSubjects";
 

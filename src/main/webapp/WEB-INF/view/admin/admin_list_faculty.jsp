@@ -9,7 +9,7 @@
 		<fmt:message key="faculty.list_jsp.label.faculties_list" />
 	</div>
 	<p>
-		<a href="admin/addFaculty"><fmt:message
+		<a href="addFaculty"><fmt:message
 				key="faculty.list_jsp.button.add" /></a>
 	</p>
 	<table id="facultiesTable" class="display">
@@ -24,8 +24,9 @@
 			<c:forEach var="faculty" items="${faculties}">
 				<tr>
 					<td>
-						<a href="<c:url value="admin/viewFaculty"><c:param name="name_en" value="${faculty.nameEn}"/></c:url>">
-							<c:out value="${lang eq 'ru' ? faculty.nameRu : faculty.nameEn}"></c:out></a>
+						<a href="<c:url value="viewFaculty"><c:param name="name_en" value="${faculty.nameEn}"/></c:url>">
+							<c:out value="${lang eq 'ru' ? faculty.nameRu : faculty.nameEn}"></c:out>
+						</a>
 					</td>
 					<td><c:out value="${faculty.totalPlaces}"></c:out></td>
 					<td><c:out value="${faculty.budgetPlaces}"></c:out></td>

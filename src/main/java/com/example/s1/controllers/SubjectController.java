@@ -78,7 +78,7 @@ public class SubjectController {
         subject.setNameEn(nameEn);
         subjectRepository.save(subject);
         log.trace("Create subject record in database: {}", subject);
-        return "redirect:viewSubject?name_en=" + nameEn;
+        return "redirect:/viewSubject?name_en=" + nameEn;
     }
 
     @PostMapping("/deleteSubject")
@@ -109,12 +109,12 @@ public class SubjectController {
                 result = "redirect:/viewAllSubjects";
             } else {
                 log.trace("There are grades records that rely on this subject.");
-                result = "redirect:viewSubject?name_en=" + subjectToDelete.getNameEn();
+                result = "redirect:/viewSubject?name_en=" + subjectToDelete.getNameEn();
             }
             return result;
         }
         log.trace("There are faculties that have this subject as preliminary.");
-        return "redirect:viewSubject?name_en=" + subjectToDelete.getNameEn();
+        return "redirect:/viewSubject?name_en=" + subjectToDelete.getNameEn();
     }
 
     @GetMapping("/editSubject")
@@ -147,6 +147,6 @@ public class SubjectController {
         log.trace("After calling setters with request parameters on subject entity: {}", subject);
         subjectRepository.save(subject);
         log.trace("Subject record updated");
-        return "redirect:viewSubject?name_en=" + nameEn;
+        return "redirect:/viewSubject?name_en=" + nameEn;
     }
 }

@@ -115,15 +115,14 @@ public class FacultyService {
         log.trace("Set the request attribute: 'facultySubjects' = {}", facultySubjects);
 
         String role = (String) session.getAttribute("userRole");
-
-        if (role == null || Role.isUser(role)) {
-            String userEmail = String.valueOf(session.getAttribute("user"));
+        String userEmail = (String) session.getAttribute("user");
+        if (Role.isUser(role)) {
             boolean applied = hasUserAppliedFacultyByEmail(facultyRecord, userEmail);
             map.put("alreadyApplied", applied ? "yes" : "no");
             return "/user/user_view_faculty";
         }
         if (!Role.isAdmin(role)) {
-            return null;
+            return "/user/user_view_faculty";
         }
 
         Iterable<Applicant> applicants = applicantRepository.findAllByFacultyId(facultyRecord.getId());
