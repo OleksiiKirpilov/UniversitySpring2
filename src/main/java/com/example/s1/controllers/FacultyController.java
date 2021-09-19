@@ -190,8 +190,8 @@ public class FacultyController {
         log.trace("Set the request attribute: 'district' = {}", applicant.getDistrict());
         map.put(Fields.APPLICANT_SCHOOL, applicant.getSchool());
         log.trace("Set the request attribute: 'school' = {}", applicant.getSchool());
-        map.put(Fields.APPLICANT_IS_BLOCKED, applicant.isBlockedStatus());
-        log.trace("Set the request attribute: 'isBlocked' = {}", applicant.isBlockedStatus());
+        map.put(Fields.APPLICANT_IS_BLOCKED, applicant.isBlocked());
+        log.trace("Set the request attribute: 'isBlocked' = {}", applicant.isBlocked());
         return Path.FORWARD_APPLICANT_PROFILE;
     }
 
@@ -201,8 +201,8 @@ public class FacultyController {
         if (applicant == null) {
             return "redirect:/";
         }
-		boolean updatedBlockedStatus = !applicant.isBlockedStatus();
-		applicant.setBlockedStatus(updatedBlockedStatus);
+		boolean updatedBlockedStatus = !applicant.isBlocked();
+		applicant.setBlocked(updatedBlockedStatus);
 		log.trace("Applicant with 'id' = {} and changed 'isBlocked' status = {}"
 				+ " record will be updated.", id, updatedBlockedStatus);
 		applicantRepository.save(applicant);

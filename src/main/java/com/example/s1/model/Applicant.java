@@ -1,6 +1,7 @@
 package com.example.s1.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.io.Serializable;
  */
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name ="applicants")
 public class Applicant implements Serializable {
 
@@ -33,13 +35,13 @@ public class Applicant implements Serializable {
     private Long userId;
 
     @Column(nullable = false)
-    private boolean blockedStatus;
+    private boolean isBlocked;
 
-    public Applicant(String city, String district, String school, Long userId, boolean blockedStatus) {
+    public Applicant(String city, String district, String school, Long userId, boolean isBlocked) {
         this.city = city;
         this.district = district;
         this.school = school;
         this.userId = userId;
-        this.blockedStatus = blockedStatus;
+        this.isBlocked = isBlocked;
     }
 }

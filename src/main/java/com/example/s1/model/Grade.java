@@ -1,6 +1,7 @@
 package com.example.s1.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.io.Serializable;
  */
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name = "grades")
 public class Grade implements Serializable {
 
@@ -19,9 +21,16 @@ public class Grade implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
     private Long subjectId;
+
+    @Column
     private Long applicantId;
+
+    @Column
     private int grade;
+
+    @Column
     private String examType;
 
     public Grade(Long subjectId, Long id, int gradeValue, String examType) {

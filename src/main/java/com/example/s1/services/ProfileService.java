@@ -51,8 +51,8 @@ public class ProfileService {
             log.trace("Set attribute 'district': {}", a.getDistrict());
             map.put(Fields.APPLICANT_SCHOOL, a.getSchool());
             log.trace("Set attribute 'school': {}", a.getSchool());
-            map.put(Fields.APPLICANT_IS_BLOCKED, a.isBlockedStatus());
-            log.trace("Set attribute 'isBlocked': {}", a.isBlockedStatus());
+            map.put(Fields.APPLICANT_IS_BLOCKED, a.isBlocked());
+            log.trace("Set attribute 'isBlocked': {}", a.isBlocked());
             return Path.FORWARD_USER_PROFILE_EDIT;
         }
         return Path.WELCOME_PAGE;
@@ -118,7 +118,7 @@ public class ProfileService {
             a.setCity(city);
             a.setDistrict(district);
             a.setSchool(school);
-            a.setBlockedStatus(isBlocked);
+            a.setBlocked(isBlocked);
             log.trace("After calling setters with request parameters on applicant entity: {}", a);
             applicantRepository.save(a);
             log.trace("Applicant info updated");
