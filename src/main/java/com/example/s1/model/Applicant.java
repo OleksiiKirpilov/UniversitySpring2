@@ -35,13 +35,13 @@ public class Applicant implements Serializable {
     private Long userId;
 
     @Column(nullable = false)
-    private boolean isBlocked;
+    private boolean blocked;
 
-    public Applicant(String city, String district, String school, Long userId, boolean isBlocked) {
+    public Applicant(String city, String district, String school, Long userId, boolean blocked) {
         this.city = city;
         this.district = district;
         this.school = school;
         this.userId = userId;
-        this.isBlocked = isBlocked;
+        this.blocked = blocked;
     }
 }

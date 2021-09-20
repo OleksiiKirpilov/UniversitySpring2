@@ -14,14 +14,4 @@ public class WelcomeController {
         return Path.WELCOME_PAGE;
     }
 
-//    @GetMapping("/welcome*")
-//    public String welcome2() {
-//        return "welcome";
-//    }
-
-//    @GetMapping("/error*")
-//    public String error() {
-//        return Path.ERROR_PAGE;
-//    }
-
 }

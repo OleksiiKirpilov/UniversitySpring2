@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -48,9 +47,7 @@ public class FacultyController {
     @GetMapping("/viewAllFaculties")
     public String list(HttpSession session, HttpServletRequest request) {
         Iterable<Faculty> faculties = facultyRepository.findAll();
-        log.trace("Faculties records found: {}", faculties);
         request.setAttribute("faculties", faculties);
-        log.trace("Set the request attribute: 'faculties' = {}", faculties);
         String role = (String) session.getAttribute("userRole");
         if (role == null || Role.isUser(role)) {
             return Path.FORWARD_FACULTY_VIEW_ALL_USER;
@@ -70,11 +67,8 @@ public class FacultyController {
 
     @GetMapping("/addFaculty")
     public String preAdd(HttpServletRequest request) {
-        log.trace("Request for only showing (not adding) faculty/add.jsp");
         Iterable<Subject> allSubjects = subjectRepository.findAll();
-        log.trace("All subjects found: {}", allSubjects);
         request.setAttribute("allSubjects", allSubjects);
-        log.trace("Set request attribute 'allSubjects' = {}", allSubjects);
         return Path.FORWARD_FACULTY_ADD_ADMIN;
     }
 
@@ -105,19 +99,13 @@ public class FacultyController {
                               ModelMap map) {
         Faculty faculty = facultyRepository.findByNameEn(nameEn);
         map.put(Fields.FACULTY_NAME_RU, faculty.getNameRu());
-        log.trace("Set attribute 'name_ru': {}", faculty.getNameRu());
         map.put(Fields.FACULTY_NAME_EN, faculty.getNameEn());
-        log.trace("Set attribute 'name_en': {}", faculty.getNameEn());
         map.put(Fields.FACULTY_TOTAL_PLACES, faculty.getTotalPlaces());
-        log.trace("Set attribute 'total_places': {}", faculty.getTotalPlaces());
         map.put(Fields.FACULTY_BUDGET_PLACES, faculty.getBudgetPlaces());
-        log.trace("Set attribute 'budget_places': {}", faculty.getBudgetPlaces());
         Iterable<Subject> otherSubjects = subjectRepository.findAllByFacultyIdNotEquals(faculty.getId());
         map.put("otherSubjects", otherSubjects);
-        log.trace("Set attribute 'otherSubjects': {}", otherSubjects);
         Iterable<Subject> facultySubjects = subjectRepository.findAllByFacultyId(faculty.getId());
         map.put("facultySubjects", facultySubjects);
-        log.trace("Set attribute 'facultySubjects': {}", facultySubjects);
         return Path.FORWARD_FACULTY_EDIT_ADMIN;
     }
 
@@ -152,24 +140,16 @@ public class FacultyController {
             return Path.ERROR_PAGE;
         }
         map.put("first_name", user.getFirstName());
-        log.trace("Set the request attribute: 'first_name' = {}", user.getFirstName());
         map.put("last_name", user.getLastName());
-        log.trace("Set the request attribute: 'last_name' = {}", user.getLastName());
         map.put("email", user.getEmail());
-        log.trace("Set the request attribute: 'email' = {}", user.getEmail());
         map.put("role", user.getRole());
-        log.trace("Set the request attribute: 'role' = {}", user.getRole());
+
         Applicant applicant = applicantRepository.findByUserId(user.getId());
         map.put(Fields.ENTITY_ID, applicant.getId());
-        log.trace("Set the request attribute: 'id' = {}", applicant.getId());
         map.put(Fields.APPLICANT_CITY, applicant.getCity());
-        log.trace("Set the request attribute: 'city' = {}", applicant.getCity());
         map.put(Fields.APPLICANT_DISTRICT, applicant.getDistrict());
-        log.trace("Set the request attribute: 'district' = {}", applicant.getDistrict());
         map.put(Fields.APPLICANT_SCHOOL, applicant.getSchool());
-        log.trace("Set the request attribute: 'school' = {}", applicant.getSchool());
         map.put(Fields.APPLICANT_IS_BLOCKED, applicant.isBlocked());
-        log.trace("Set the request attribute: 'isBlocked' = {}", applicant.isBlocked());
         return Path.FORWARD_APPLICANT_PROFILE;
     }
 
@@ -181,7 +161,7 @@ public class FacultyController {
         }
         boolean updatedBlockedStatus = !applicant.isBlocked();
         applicant.setBlocked(updatedBlockedStatus);
-        log.trace("Applicant with 'id' = {} and changed 'isBlocked' status = {}"
+        log.trace("Applicant with 'id' = {} and changed 'blocked' status = {}"
                 + " record will be updated.", id, updatedBlockedStatus);
         applicantRepository.save(applicant);
         return Path.REDIRECT_APPLICANT_PROFILE + applicant.getUserId();
@@ -205,5 +185,10 @@ public class FacultyController {
                                ModelMap map) {
         return reportService.createReport(id, map);
     }
+
+//    @GetMapping("/createReport")
+//    public String test(@RequestParam Long id) {
+//        return Path.WELCOME_PAGE;
+//    }
 
 }

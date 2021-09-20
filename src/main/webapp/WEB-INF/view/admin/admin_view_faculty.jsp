@@ -50,7 +50,8 @@
 		</p>
 
 		<p>
-			<a href="/createReport?id=${id}">
+<%--			<a href="createReport?id=${id}">--%>
+			<a href="<c:url value="createReport"><c:param name="id" value="${id}"/></c:url>">
 				<fmt:message key="faculty.view_jsp.button.create_report" />
 			</a>
 		</p>

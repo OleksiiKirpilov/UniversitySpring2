@@ -37,24 +37,17 @@ public class SubjectController {
     @GetMapping("/viewAllSubjects")
     public String listAll(HttpServletRequest request) {
         Iterable<Subject> allSubjects = subjectRepository.findAll();
-        log.trace("Subjects records found: {}", allSubjects);
         request.setAttribute("allSubjects", allSubjects);
-        log.trace("Set the request attribute: 'allSubjects' = {}", allSubjects);
         return Path.FORWARD_SUBJECT_VIEW_ALL_ADMIN;
     }
 
     @GetMapping("/viewSubject")
     public String viewSubject(@RequestParam(name = "name_en") String nameEn,
                               ModelMap map) {
-        log.trace("Subject name to look for is equal to: '{}'", nameEn);
         Subject subject = subjectRepository.findSubjectByNameEnEquals(nameEn);
-        log.trace("Subject record found: {}", subject);
         map.put(Fields.ENTITY_ID, subject.getId());
-        log.trace("Set the request attribute: 'id' = {}", subject.getId());
         map.put(Fields.SUBJECT_NAME_RU, subject.getNameRu());
-        log.trace("Set the request attribute: 'name_ru' = {}", subject.getNameRu());
         map.put(Fields.SUBJECT_NAME_EN, subject.getNameEn());
-        log.trace("Set the request attribute: 'name_en' = {}", subject.getNameEn());
         return Path.FORWARD_SUBJECT_VIEW_ADMIN;
     }
 
@@ -66,8 +59,6 @@ public class SubjectController {
     @PostMapping("/addSubject")
     public String addSubject(@RequestParam(name = "name_ru") String nameRu,
                              @RequestParam(name = "name_en") String nameEn) {
-        log.trace("Fetch request parameter: 'name_ru' = {}", nameRu);
-        log.trace("Fetch request parameter: 'name_en' = {}", nameEn);
         boolean valid = InputValidator.validateSubjectParameters(nameRu, nameEn);
         if (!valid) {
 //            setErrorMessage(request, ERROR_FILL_ALL_FIELDS);

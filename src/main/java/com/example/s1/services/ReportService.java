@@ -24,7 +24,7 @@ public class ReportService {
     FacultyRepository facultyRepository;
 
     public String createReport(Long id, ModelMap map) {
-        List<ReportSheet> report = reportSheetRepository.findAllByFacultyId(id);
+        List<ReportSheet> report = reportSheetRepository.computeAllByFacultyId(id);
         Faculty faculty = facultyRepository.findById(id).orElse(null);
         if (faculty == null) {
             log.error("Can not find faculty with id={}", id);
@@ -43,14 +43,9 @@ public class ReportService {
             }
         }
         map.put(Fields.FACULTY_NAME_RU, faculty.getNameRu());
-        log.trace("Set attribute 'name_ru': {}", faculty.getNameRu());
         map.put(Fields.FACULTY_NAME_EN, faculty.getNameEn());
-        log.trace("Set attribute 'name_en': {}", faculty.getNameEn());
         map.put("facultyReport", report);
-        log.trace("Set attribute 'facultyReport': {}", report);
         return Path.FORWARD_REPORT_SHEET_VIEW;
     }
-
-
 
 }

@@ -34,9 +34,9 @@
 					<td><c:out value="${reportRecord.firstName}"></c:out></td>
 					<td><c:out value="${reportRecord.lastName}"></c:out></td>
 					<td><c:out value="${reportRecord.email}"></c:out></td>
-					<td><c:if test="${reportRecord.blockedStatus == true}">
+					<td><c:if test="${reportRecord.blocked == true}">
 							<fmt:message key="report.view_jsp.label.blocked" />
-						</c:if> <c:if test="${reportRecord.blockedStatus == false}">
+						</c:if> <c:if test="${reportRecord.blocked == false}">
 							<fmt:message key="report.view_jsp.label.unblocked" />
 						</c:if></td>
 					<td><c:out value="${reportRecord.preliminarySum}"></c:out></td>

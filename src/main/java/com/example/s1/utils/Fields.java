@@ -20,7 +20,7 @@ public final class Fields {
     public static final String APPLICANT_CITY = "city";
     public static final String APPLICANT_DISTRICT = "district";
     public static final String APPLICANT_SCHOOL = "school";
-    public static final String APPLICANT_IS_BLOCKED = "isBlocked";
+    public static final String APPLICANT_IS_BLOCKED = "blocked";
     public static final String APPLICANT_ID = "applicant_id";
 
     public static final String FACULTY_NAME_RU = "name_ru";
@@ -41,7 +41,7 @@ public final class Fields {
     public static final String REPORT_SHEET_USER_FIRST_NAME = "first_name";
     public static final String REPORT_SHEET_USER_LAST_NAME = "last_name";
     public static final String REPORT_SHEET_USER_EMAIL = "email";
-    public static final String REPORT_SHEET_APPLICANT_IS_BLOCKED = "isBlocked";
+    public static final String REPORT_SHEET_APPLICANT_IS_BLOCKED = "blocked";
     public static final String REPORT_SHEET_APPLICANT_PRELIMINARY_SUM = "preliminary_sum";
     public static final String REPORT_SHEET_APPLICANT_DIPLOMA_SUM = "diploma_sum";
     public static final String REPORT_SHEET_APPLICANT_TOTAL_SUM = "total_sum";

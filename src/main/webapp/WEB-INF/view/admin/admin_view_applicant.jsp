@@ -49,10 +49,10 @@
 			<label>
 				<fmt:message key="applicant.view_jsp.label.blocked_status" />
 			</label>
-			<c:if test="${requestScope.isBlocked == true}">
+			<c:if test="${requestScope.blocked == true}">
 				<fmt:message key="applicant.view_jsp.label.blocked" />
 			</c:if>
-			<c:if test="${requestScope.isBlocked == false}">
+			<c:if test="${requestScope.blocked == false}">
 				<fmt:message key="applicant.view_jsp.label.unblocked" />
 			</c:if>
 		</p>

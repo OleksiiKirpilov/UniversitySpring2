@@ -15,7 +15,7 @@
 	<div class="form">
 		<form id="profile" method="POST" action="editProfile">
 			<input type="hidden" name="command" value="editProfile"> <input
-				type="hidden" name="isBlocked" value="${requestScope.isBlocked}">
+				type="hidden" name="blocked" value="${requestScope.blocked}">
 			<input type="hidden" name="oldEmail" value="${requestScope.email}">
 			<div class="field">
 				<label for="lang"> <fmt:message
