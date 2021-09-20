@@ -11,14 +11,12 @@ import com.example.s1.utils.InputValidator;
 import com.example.s1.utils.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Slf4j
@@ -44,19 +42,14 @@ public class ProfileController {
                         @RequestParam String password,
                         HttpSession session) {
         User user = userRepository.findUserByEmailAndPassword(email, password);
-        log.trace("User found: {}", user);
         if (user == null) {
 //            setErrorMessage(request, ERROR_CAN_NOT_FIND_USER);
             log.error("errorMessage: Cannot find user with such login/password");
             return Path.WELCOME_PAGE;
         }
         session.setAttribute("user", user.getEmail());
-        log.trace("Set session attribute 'user' = {}", user.getEmail());
         session.setAttribute("userRole", user.getRole());
-        log.trace("Set session attribute: 'userRole' = {}", user.getRole());
         session.setAttribute("lang", user.getLang());
-        log.trace("Set session attribute 'lang' = {}", user.getLang());
-        log.info("User: {} logged as {}", user, user.getRole());
         return Path.REDIRECT_TO_VIEW_ALL_FACULTIES;
     }
 
@@ -65,7 +58,6 @@ public class ProfileController {
         if (session != null) {
             session.invalidate();
         }
-        log.debug("Finished logout.");
         return Path.WELCOME_PAGE;
     }
 
@@ -105,13 +97,9 @@ public class ProfileController {
         String userEmail = String.valueOf(session.getAttribute("user"));
         User user = userRepository.findByEmail(userEmail);
         map.put("first_name", user.getFirstName());
-        log.trace("Set the request attribute: 'first_name' = {}", user.getFirstName());
         map.put("last_name", user.getLastName());
-        log.trace("Set the request attribute: 'last_name' = {}", user.getLastName());
         map.put("email", user.getEmail());
-        log.trace("Set the request attribute: 'email' = {}", user.getEmail());
         map.put("role", user.getRole());
-        log.trace("Set the request attribute: 'role' = {}", user.getRole());
         String role = user.getRole();
         if (Role.isAdmin(role)) {
             return Path.FORWARD_ADMIN_PROFILE;
@@ -119,11 +107,8 @@ public class ProfileController {
         if (Role.isUser(role)) {
             Applicant applicant = applicantRepository.findByUserId(user.getId());
             map.put("city", applicant.getCity());
-            log.trace("Set the request attribute: 'city' = {}", applicant.getCity());
             map.put("district", applicant.getDistrict());
-            log.trace("Set the request attribute: 'district' = {}", applicant.getDistrict());
             map.put("school", applicant.getSchool());
-            log.trace("Set the request attribute: 'school' = {}", applicant.getSchool());
             return Path.FORWARD_USER_PROFILE;
         }
         return Path.WELCOME_PAGE;
@@ -173,7 +158,6 @@ public class ProfileController {
         return profileService.editProfilePost(oldEmail, firstName, lastName, email, password, lang,
                 session, city, district, school);
     }
-
 
 
 }

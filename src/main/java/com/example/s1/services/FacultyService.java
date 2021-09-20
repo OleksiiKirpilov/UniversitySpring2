@@ -47,11 +47,9 @@ public class FacultyService {
             log.error("errorMessage: Not all fields are properly filled");
             return Path.REDIRECT_FACULTY_ADD_ADMIN;
         }
-        log.trace("All fields are properly filled. Start updating database.");
         int total = Integer.parseInt(totalPlaces);
         int budget = Integer.parseInt(budgetPlaces);
         Faculty faculty = new Faculty(nameRu, nameEn, budget, total);
-        log.trace("Create faculty transfer object: {}", faculty);
         facultyRepository.save(faculty);
         log.trace("Create faculty record in database: {}", faculty);
         // only after creating a faculty record we can proceed with
@@ -72,7 +70,6 @@ public class FacultyService {
                                 String nameEn, String nameRu,
                                 String facultyTotalPlaces, String facultyBudgetPlaces,
                                 String[] oldCheckedSubjectsIds, String[] newCheckedSubjectsIds) {
-        log.trace("All fields are properly filled. Start updating database.");
         int totalPlaces = Integer.parseInt(facultyTotalPlaces);
         int budgetPlaces = Integer.parseInt(facultyBudgetPlaces);
         Faculty faculty = new Faculty(nameRu, nameEn, budgetPlaces, totalPlaces);
@@ -80,15 +77,10 @@ public class FacultyService {
         faculty.setId(oldFacultyRecord.getId());
         facultyRepository.save(faculty);
         log.trace("Faculty record updated from: {}, to: {}", oldFacultyRecord, faculty);
-        if (log.isTraceEnabled()) {
-            log.trace("Get checked subjects before: {}", Arrays.toString(oldCheckedSubjectsIds));
-            log.trace("Get checked subjects after: {}", Arrays.toString(newCheckedSubjectsIds));
-        }
         if (oldCheckedSubjectsIds == null) {
             if (newCheckedSubjectsIds == null) {
                 // if before all subjects were unchecked and they still
                 // are then nothing changed - do nothing
-                log.trace("No faculty subjects records will be changed");
                 return Path.REDIRECT_TO_FACULTY + nameEn;
             }
             // if user checked something,but before no subjects were checked
@@ -102,7 +94,6 @@ public class FacultyService {
         }
         if (newCheckedSubjectsIds == null) {
             // if user unchecked all checkboxes and before there were some checked subjects
-            log.trace("No subjects were checked for this faculty - all records that will be found will be deleted ");
             facultySubjectsRepository.deleteAllByFacultyId(faculty.getId());
             return Path.REDIRECT_TO_FACULTY + nameEn;
         }
@@ -138,9 +129,7 @@ public class FacultyService {
     }
 
     public String viewFaculty(String nameEn, ModelMap map, HttpSession session) {
-        log.trace("Faculty name to look for is equal to: '{}'", nameEn);
         Faculty facultyRecord = facultyRepository.findByNameEn(nameEn);
-        log.trace("Faculty record found: {}", facultyRecord);
         map.put(Fields.ENTITY_ID, facultyRecord.getId());
         map.put(Fields.FACULTY_NAME_RU, facultyRecord.getNameRu());
         map.put(Fields.FACULTY_NAME_EN, facultyRecord.getNameEn());
@@ -149,7 +138,6 @@ public class FacultyService {
 
         Iterable<Subject> facultySubjects = subjectRepository.findAllByFacultyId(facultyRecord.getId());
         map.put("facultySubjects", facultySubjects);
-        log.trace("Set the request attribute: 'facultySubjects' = {}", facultySubjects);
 
         String role = (String) session.getAttribute("userRole");
         String userEmail = (String) session.getAttribute("user");
@@ -169,28 +157,20 @@ public class FacultyService {
             facultyApplicants.put(applicant, user.getFirstName() + " " + user.getLastName());
         }
         map.put("facultyApplicants", facultyApplicants);
-        log.trace("Set the request attribute: 'facultyApplicants' = {}", facultyApplicants);
         return Path.FORWARD_FACULTY_VIEW_ADMIN;
     }
 
     public String applyFacultyGet(String nameEn, ModelMap map) {
         Faculty faculty = facultyRepository.findByNameEn(nameEn);
         map.put(Fields.ENTITY_ID, faculty.getId());
-        log.trace("Set the request faculty attribute: 'id' = {}", faculty.getId());
         map.put(Fields.FACULTY_NAME_RU, faculty.getNameRu());
-        log.trace("Set the request attribute: 'name' = {}", faculty.getNameRu());
         map.put(Fields.FACULTY_NAME_EN, faculty.getNameEn());
-        log.trace("Set the request attribute: 'name_en' = {}", faculty.getNameEn());
         map.put(Fields.FACULTY_TOTAL_PLACES, faculty.getTotalPlaces());
-        log.trace("Set the request attribute: 'total_places' = {}", faculty.getTotalPlaces());
         map.put(Fields.FACULTY_BUDGET_PLACES, faculty.getBudgetPlaces());
-        log.trace("Set the request attribute: 'budget_places' = {}", faculty.getBudgetPlaces());
         Iterable<Subject> facultySubjects = subjectRepository.findAllByFacultyId(faculty.getId());
         map.put("facultySubjects", facultySubjects);
-        log.trace("Set attribute 'facultySubjects': {}", facultySubjects);
         Iterable<Subject> allSubjects = subjectRepository.findAll();
         map.put("allSubjects", allSubjects);
-        log.trace("Set attribute 'allSubjects': {}", allSubjects);
         return Path.FORWARD_FACULTY_APPLY_USER;
     }
 
@@ -201,9 +181,7 @@ public class FacultyService {
         log.trace("Start processing applying for faculty form");
         String email = String.valueOf(session.getAttribute("user"));
         User user = userRepository.findByEmail(email);
-        log.trace("Found user in database that wants to apply: {}", user);
         Applicant applicant = applicantRepository.findByUserId(user.getId());
-        log.trace("Found applicant record in database for this user: {}", applicant);
         FacultyApplicants newFacultyApplicant = new FacultyApplicants();
         newFacultyApplicant.setFacultyId(facultyId);
         newFacultyApplicant.setApplicantId(applicant.getId());
@@ -215,7 +193,6 @@ public class FacultyService {
                     user, applicant, facultyId);
             return Path.REDIRECT_TO_VIEW_ALL_FACULTIES;
         }
-        log.trace("Start extracting data from request");
         Map<String, String[]> parameterMap = request.getParameterMap();
         for (Map.Entry<String, String[]> e : parameterMap.entrySet()) {
             String parameterName = e.getKey();
@@ -226,13 +203,10 @@ public class FacultyService {
                 Long subjectId = Long.parseLong(subjectIdAndExamType[0]);
                 String examType = subjectIdAndExamType[1];
                 Grade grade = new Grade(subjectId, applicant.getId(), gradeValue, examType);
-                log.trace("Create Grade transfer object: {}", grade);
                 gradeRepository.save(grade);
                 log.trace("Grade record was created in database: {}", grade);
             }
         }
-        log.trace("End extracting data from request");
-        log.trace("Create FacultyApplicants transfer object: {}", newFacultyApplicant);
         facultyApplicantsRepository.save(newFacultyApplicant);
         log.trace("FacultyApplicants record was created in database: {}", newFacultyApplicant);
         log.trace("Finished processing applying for faculty form");

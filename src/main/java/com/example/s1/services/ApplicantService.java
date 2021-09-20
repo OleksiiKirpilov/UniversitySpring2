@@ -29,11 +29,8 @@ public class ApplicantService {
         applicantRepository.save(applicant);
         log.trace("Applicant record created: {}", applicant);
         session.setAttribute("user", user.getEmail());
-        log.trace("Set session attribute 'user' = {}", user.getEmail());
         session.setAttribute("userRole", user.getRole());
-        log.trace("Set session attribute: 'userRole' = {}", user.getRole());
         session.setAttribute("lang", user.getLang());
-        log.trace("Set session attribute 'lang' = {}", user.getLang());
         log.info("User: {} logged as {}", user, user.getRole());
         return Path.REDIRECT_TO_PROFILE;
     }

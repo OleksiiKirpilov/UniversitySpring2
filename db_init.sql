@@ -201,7 +201,7 @@ GROUP BY faculty_applicants.faculty_id, applicant_id;
 
 
 
------------------- prepare users ----------------------------------
+-- ---------------- prepare users ----------------------------------
 INSERT INTO `users`
 VALUES (1, 'adminname', 'adminlastname', 'admin@univer.com', 'admin', 'admin', 'en');
 INSERT INTO `users`
@@ -221,7 +221,7 @@ VALUES (8, 'James', 'Brown', 'j.brown@gmail.com', '2222', 'user', 'en');
 INSERT INTO `users`
 VALUES (9, 'Darth', 'Vader', 'd.vader@gmail.com', '2222', 'user', 'en');
 
-------------------- prepare applicants ----------------------------
+-- ----------------- prepare applicants ----------------------------
 INSERT INTO applicants
 VALUES (1, 'Харьков', 'Харьковская область', 'Школа 1', 2, DEFAULT);
 INSERT INTO applicants
@@ -239,7 +239,7 @@ VALUES (7, 'Houston', 'Texas', 'Houston Community College', 8, DEFAULT);
 INSERT INTO applicants
 VALUES (8, 'Tatooine', 'no data', 'home education', 9, DEFAULT);
 
--------------------- prepare faculties ------------------------------
+-- ------------------ prepare faculties ------------------------------
 INSERT INTO faculties
 VALUES (1, 'Географический', 'Geography', 20, 5);
 INSERT INTO faculties
@@ -256,7 +256,7 @@ VALUES (5, 'Информационных технологий', 'Information tec
 
 -- укр язык и лит, история У, математика, ин. язык, биология, химия, география,
 
---------------------- prepare subjects ------------------------
+-- ------------------- prepare subjects ------------------------
 INSERT INTO subjects
 VALUES (1, 'Украинский язык и литература', 'Ukrainian language and literature');
 INSERT INTO subjects
@@ -268,7 +268,7 @@ VALUES (4, 'География', 'Geography');
 INSERT INTO subjects
 VALUES (5, 'Английский язык', 'English');
 
----------------------- prepare faculty_subjects ----------------------
+-- -------------------- prepare faculty_subjects ----------------------
 INSERT INTO faculty_subjects
 VALUES (1, 1, 4);
 INSERT INTO faculty_subjects
@@ -294,7 +294,7 @@ VALUES (9, 5, 5);
 INSERT INTO faculty_subjects
 VALUES (10, 5, 2);
 
---------------------- prepare grades ---------------------------------------
+-- ------------------- prepare grades ---------------------------------------
 INSERT INTO grades
 VALUES (1, 1, 1, 7, 'diploma');
 INSERT INTO grades
@@ -310,6 +310,6 @@ VALUES (6, 1, 1, 9, 'preliminary');
 INSERT INTO grades
 VALUES (7, 1, 3, 12, 'preliminary');
 
---------------------- prepare faculty applicants----------------------------
+-- ------------------- prepare faculty applicants----------------------------
 INSERT INTO faculty_applicants
 VALUES (1, 1, 3);

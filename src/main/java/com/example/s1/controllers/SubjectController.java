@@ -79,7 +79,6 @@ public class SubjectController {
         if (subjectToDelete == null) {
             return Path.FORWARD_SUBJECT_VIEW_ALL_ADMIN;
         }
-        log.trace("Found subject that should be deleted: {}", subjectToDelete);
         Collection<FacultySubjects> facultySubjects = new ArrayList<>();
         for (FacultySubjects fs : facultySubjectsRepository.findAll()) {
             if (fs.getSubjectId().equals(subjectToDelete.getId())) {
@@ -114,9 +113,7 @@ public class SubjectController {
                           ModelMap map) {
         Subject subject = subjectRepository.findSubjectByNameEnEquals(nameEn);
         map.put(Fields.SUBJECT_NAME_RU, subject.getNameRu());
-        log.trace("Set attribute 'name_ru': {}", subject.getNameRu());
         map.put(Fields.SUBJECT_NAME_EN, subject.getNameEn());
-        log.trace("Set attribute 'name_en': {}", subject.getNameEn());
         return Path.FORWARD_SUBJECT_EDIT_ADMIN;
     }
 
@@ -124,10 +121,7 @@ public class SubjectController {
     public String editPost(@RequestParam String oldName,
                            @RequestParam(name = "name_en") String nameEn,
                            @RequestParam(name = "name_ru") String nameRu) {
-        log.trace("Fetch request parameter: 'oldName' = {}", oldName);
         Subject subject = subjectRepository.findSubjectByNameEnEquals(oldName);
-        log.trace("Subject record found with this data: {}", subject);
-        log.trace("Fetch request parameter: 'name_en' = {}", nameEn);
         boolean valid = InputValidator.validateSubjectParameters(nameRu, nameEn);
         if (!valid) {
 //            setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
@@ -136,9 +130,8 @@ public class SubjectController {
         }
         subject.setNameRu(nameRu);
         subject.setNameEn(nameEn);
-        log.trace("After calling setters with request parameters on subject entity: {}", subject);
         subjectRepository.save(subject);
-        log.trace("Subject record updated");
+        log.trace("After calling setters with request parameters on subject entity: {}", subject);
         return Path.REDIRECT_TO_SUBJECT + nameEn;
     }
 }

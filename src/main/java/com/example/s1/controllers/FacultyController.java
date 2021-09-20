@@ -186,9 +186,4 @@ public class FacultyController {
         return reportService.createReport(id, map);
     }
 
-//    @GetMapping("/createReport")
-//    public String test(@RequestParam Long id) {
-//        return Path.WELCOME_PAGE;
-//    }
-
 }

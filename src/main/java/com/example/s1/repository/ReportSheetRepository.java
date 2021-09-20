@@ -8,10 +8,6 @@ import java.util.List;
 
 public interface ReportSheetRepository extends CrudRepository<ReportSheet, Long> {
 
-//    @Query(nativeQuery = true,
-//    value = "SELECT * FROM faculties_report_sheet WHERE faculty_id = ?")
-//    List<IReport> computeAllByFacultyId(Long id);
-
     @Query(nativeQuery = true, value =
             "SELECT row_number() OVER (ORDER BY first_name, last_name) id, " +
                     "faculty_id, first_name, last_name, users.email, " +
@@ -26,5 +22,4 @@ public interface ReportSheetRepository extends CrudRepository<ReportSheet, Long>
                     "ORDER BY blocked ASC , `total_sum` DESC")
     List<ReportSheet> computeAllByFacultyId(Long id);
 
-    List<ReportSheet> findAllByFacultyId(Long id);
 }
