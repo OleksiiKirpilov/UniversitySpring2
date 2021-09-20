@@ -11,12 +11,14 @@ import com.example.s1.utils.InputValidator;
 import com.example.s1.utils.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Slf4j
@@ -34,7 +36,7 @@ public class ProfileController {
 
     @GetMapping("/login")
     public String loginGet() {
-        return "redirect:welcome";
+        return Path.WELCOME_PAGE;
     }
 
     @PostMapping("/login")
@@ -55,7 +57,7 @@ public class ProfileController {
         session.setAttribute("lang", user.getLang());
         log.trace("Set session attribute 'lang' = {}", user.getLang());
         log.info("User: {} logged as {}", user, user.getRole());
-        return "redirect:/viewAllFaculties";
+        return Path.REDIRECT_TO_VIEW_ALL_FACULTIES;
     }
 
     @GetMapping("/logout")
@@ -69,7 +71,7 @@ public class ProfileController {
 
     @GetMapping("/userRegistration")
     public String addUser() {
-        return "/user/user_add_user";
+        return Path.FORWARD_USER_REGISTRATION_PAGE;
     }
 
     @PostMapping("/userRegistration")
@@ -166,12 +168,12 @@ public class ProfileController {
                                   HttpSession session,
                                   @RequestParam(required = false) String city,
                                   @RequestParam(required = false) String district,
-                                  @RequestParam(required = false) String school,
-                                  @RequestParam(required = false) boolean isBlocked
+                                  @RequestParam(required = false) String school
     ) {
         return profileService.editProfilePost(oldEmail, firstName, lastName, email, password, lang,
-                session, city, district, school, isBlocked);
+                session, city, district, school);
     }
+
 
 
 }

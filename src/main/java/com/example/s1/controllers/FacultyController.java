@@ -97,7 +97,7 @@ public class FacultyController {
         }
         facultyRepository.delete(facultyToDelete);
         log.trace("Delete faculty record in database: {}", facultyToDelete);
-        return "redirect:/viewAllFaculties";
+        return Path.REDIRECT_TO_VIEW_ALL_FACULTIES;
     }
 
     @GetMapping("/editFaculty")
@@ -118,7 +118,7 @@ public class FacultyController {
         Iterable<Subject> facultySubjects = subjectRepository.findAllByFacultyId(faculty.getId());
         map.put("facultySubjects", facultySubjects);
         log.trace("Set attribute 'facultySubjects': {}", facultySubjects);
-        return "/admin_edit_faculty";
+        return Path.FORWARD_FACULTY_EDIT_ADMIN;
     }
 
     @PostMapping("/editFaculty")
@@ -136,7 +136,7 @@ public class FacultyController {
         if (!valid) {
 //            setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
             log.error("errorMessage: Not all fields are properly filled");
-            return "redirect:/editFaculty&name_en=" + oldFacultyName;
+            return Path.REDIRECT_FACULTY_EDIT_ADMIN + oldFacultyName;
         }
         // if it's true then let's start to update the db
         return facultyService.updateFaculty(oldFacultyName, nameEn, nameRu, facultyTotalPlaces,

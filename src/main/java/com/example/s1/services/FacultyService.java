@@ -45,7 +45,7 @@ public class FacultyService {
         if (!valid) {
             //setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
             log.error("errorMessage: Not all fields are properly filled");
-            return "redirect:addFaculty";
+            return Path.REDIRECT_FACULTY_ADD_ADMIN;
         }
         log.trace("All fields are properly filled. Start updating database.");
         int total = Integer.parseInt(totalPlaces);
@@ -64,7 +64,7 @@ public class FacultyService {
             facultySubjectsRepository.saveAll(newFS);
             log.trace("FacultySubjects record created in database: {}", newFS);
         }
-        return "redirect:viewFaculty?name_en=" + nameEn;
+        return Path.REDIRECT_TO_FACULTY + nameEn;
     }
 
     @Transactional

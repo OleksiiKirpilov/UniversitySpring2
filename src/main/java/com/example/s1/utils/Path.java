@@ -5,8 +5,8 @@ package com.example.s1.utils;
  */
 public final class Path {
 
-	public static final String WELCOME_PAGE = "/welcome";
-	public static final String ERROR_PAGE = "/errorPage";
+	public static final String WELCOME_PAGE = "welcome";
+	public static final String ERROR_PAGE = "errorPage";
 
 	public static final String FORWARD_USER_REGISTRATION_PAGE = "/user/user_add_user";
 	public static final String REDIRECT_USER_REGISTRATION_PAGE = "redirect:/userRegistration";
@@ -40,17 +40,17 @@ public final class Path {
 	public static final String FORWARD_FACULTY_VIEW_USER = "/user/user_view_faculty";
 	public static final String FORWARD_FACULTY_APPLY_USER = "/user/user_apply_faculty";
 
-	public static final String FORWARD_SUBJECT_VIEW_ALL_ADMIN = "/WEB-INF/view/admin/subject/list.jsp";
-	public static final String FORWARD_SUBJECT_VIEW_ADMIN = "/WEB-INF/view/admin/subject/view.jsp";
-	public static final String FORWARD_SUBJECT_ADD_ADMIN = "/WEB-INF/view/admin/subject/add.jsp";
-	public static final String REDIRECT_SUBJECT_ADD_ADMIN = "/WEB-INF/view/admin/subject/add.jsp";
-	public static final String FORWARD_SUBJECT_EDIT_ADMIN = "/WEB-INF/view/admin/subject/edit.jsp";
-	public static final String REDIRECT_SUBJECT_EDIT_ADMIN = "/editSubject?name_en=";
+	public static final String FORWARD_SUBJECT_VIEW_ALL_ADMIN = "/admin/admin_list_subject";
+	public static final String FORWARD_SUBJECT_VIEW_ADMIN = "/admin/admin_view_subject";
+	public static final String FORWARD_SUBJECT_ADD_ADMIN = "/admin/admin_add_subject";
+	public static final String REDIRECT_SUBJECT_ADD_ADMIN = "redirect:/admin/admin_add_subject";
+	public static final String FORWARD_SUBJECT_EDIT_ADMIN = "/admin/admin_edit_subject";
+	public static final String REDIRECT_SUBJECT_EDIT_ADMIN = "redirect:/editSubject?name_en=";
 
-	public static final String FORWARD_APPLICANT_PROFILE = "/WEB-INF/view/admin/applicant/view.jsp";
-	public static final String REDIRECT_APPLICANT_PROFILE = "/viewApplicant?userId=";
+	public static final String FORWARD_APPLICANT_PROFILE = "/admin/admin_view_applicant";
+	public static final String REDIRECT_APPLICANT_PROFILE = "redirect:/viewApplicant?userId=";
 
-	public static final String FORWARD_REPORT_SHEET_VIEW = "/WEB-INF/view/admin/report/view.jsp";
+	public static final String FORWARD_REPORT_SHEET_VIEW = "/admin/admin_view_report";
 
 	private Path() {
 	}

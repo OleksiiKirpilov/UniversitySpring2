@@ -8,6 +8,7 @@ import com.example.s1.repository.GradeRepository;
 import com.example.s1.repository.SubjectRepository;
 import com.example.s1.utils.Fields;
 import com.example.s1.utils.InputValidator;
+import com.example.s1.utils.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,7 +40,7 @@ public class SubjectController {
         log.trace("Subjects records found: {}", allSubjects);
         request.setAttribute("allSubjects", allSubjects);
         log.trace("Set the request attribute: 'allSubjects' = {}", allSubjects);
-        return "admin/admin_list_subject";
+        return Path.FORWARD_SUBJECT_VIEW_ALL_ADMIN;
     }
 
     @GetMapping("/viewSubject")
@@ -54,12 +55,12 @@ public class SubjectController {
         log.trace("Set the request attribute: 'name_ru' = {}", subject.getNameRu());
         map.put(Fields.SUBJECT_NAME_EN, subject.getNameEn());
         log.trace("Set the request attribute: 'name_en' = {}", subject.getNameEn());
-        return "admin/admin_view_subject";
+        return Path.FORWARD_SUBJECT_VIEW_ADMIN;
     }
 
     @GetMapping("/addSubject")
     public String addSubjectJsp() {
-        return "admin/admin_add_subject";
+        return Path.FORWARD_SUBJECT_ADD_ADMIN;
     }
 
     @PostMapping("/addSubject")
@@ -71,21 +72,21 @@ public class SubjectController {
         if (!valid) {
 //            setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
             log.error("errorMessage: Not all fields are properly filled");
-            return "redirect:admin/admin_add_subject";
+            return Path.REDIRECT_SUBJECT_ADD_ADMIN;
         }
         Subject subject = new Subject();
         subject.setNameRu(nameRu);
         subject.setNameEn(nameEn);
         subjectRepository.save(subject);
         log.trace("Create subject record in database: {}", subject);
-        return "redirect:/viewSubject?name_en=" + nameEn;
+        return Path.REDIRECT_TO_SUBJECT + nameEn;
     }
 
     @PostMapping("/deleteSubject")
     public String delete(@RequestParam Long id) {
         Subject subjectToDelete = subjectRepository.findById(id).orElse(null);
         if (subjectToDelete == null) {
-            return "redirect:admin/admin_list_subject";
+            return Path.FORWARD_SUBJECT_VIEW_ALL_ADMIN;
         }
         log.trace("Found subject that should be deleted: {}", subjectToDelete);
         Collection<FacultySubjects> facultySubjects = new ArrayList<>();
@@ -106,15 +107,15 @@ public class SubjectController {
             if (grades.isEmpty()) {
                 log.trace("No grades records on this subject. Perform deleting.");
                 subjectRepository.delete(subjectToDelete);
-                result = "redirect:/viewAllSubjects";
+                result = Path.REDIRECT_TO_VIEW_ALL_SUBJECTS;
             } else {
                 log.trace("There are grades records that rely on this subject.");
-                result = "redirect:/viewSubject?name_en=" + subjectToDelete.getNameEn();
+                result = Path.REDIRECT_TO_SUBJECT + subjectToDelete.getNameEn();
             }
             return result;
         }
         log.trace("There are faculties that have this subject as preliminary.");
-        return "redirect:/viewSubject?name_en=" + subjectToDelete.getNameEn();
+        return Path.REDIRECT_TO_SUBJECT + subjectToDelete.getNameEn();
     }
 
     @GetMapping("/editSubject")
@@ -125,7 +126,7 @@ public class SubjectController {
         log.trace("Set attribute 'name_ru': {}", subject.getNameRu());
         map.put(Fields.SUBJECT_NAME_EN, subject.getNameEn());
         log.trace("Set attribute 'name_en': {}", subject.getNameEn());
-        return "admin/admin_edit_subject";
+        return Path.FORWARD_SUBJECT_EDIT_ADMIN;
     }
 
     @PostMapping("/editSubject")
@@ -140,13 +141,13 @@ public class SubjectController {
         if (!valid) {
 //            setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
             log.error("errorMessage: Not all fields are properly filled");
-            return "redirect:/editSubject" + oldName;
+            return Path.REDIRECT_SUBJECT_EDIT_ADMIN + oldName;
         }
         subject.setNameRu(nameRu);
         subject.setNameEn(nameEn);
         log.trace("After calling setters with request parameters on subject entity: {}", subject);
         subjectRepository.save(subject);
         log.trace("Subject record updated");
-        return "redirect:/viewSubject?name_en=" + nameEn;
+        return Path.REDIRECT_TO_SUBJECT + nameEn;
     }
 }

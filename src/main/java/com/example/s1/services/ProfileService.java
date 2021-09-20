@@ -10,11 +10,14 @@ import com.example.s1.utils.InputValidator;
 import com.example.s1.utils.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -61,7 +64,7 @@ public class ProfileService {
     @Transactional
     public String editProfilePost(String oldEmail, String firstName, String lastName, String email,
                                   String password, String lang, HttpSession session,
-                                  String city, String district, String school, boolean isBlocked) {
+                                  String city, String district, String school) {
         log.trace("Fetch request parameter: 'oldEmail' = {}", oldEmail);
         log.trace("Fetch request parameter: 'first_name' = {}", firstName);
         log.trace("Fetch request parameter: 'last_name' = {}", lastName);
@@ -99,7 +102,6 @@ public class ProfileService {
             log.trace("Fetch request parameter: 'school' = {}", school);
             log.trace("Fetch request parameter: 'district' = {}", district);
             log.trace("Fetch request parameter: 'city' = {}", city);
-            log.trace("Fetch request parameter: 'isBlocked' = {}", isBlocked);
             valid = InputValidator.validateApplicantParameters(city, district, school);
             if (!valid) {
 //                setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
@@ -118,7 +120,7 @@ public class ProfileService {
             a.setCity(city);
             a.setDistrict(district);
             a.setSchool(school);
-            a.setBlocked(isBlocked);
+//            a.setBlocked(isBlocked);
             log.trace("After calling setters with request parameters on applicant entity: {}", a);
             applicantRepository.save(a);
             log.trace("Applicant info updated");
@@ -129,5 +131,7 @@ public class ProfileService {
         }
         return Path.WELCOME_PAGE;
     }
+
+
 
 }
