@@ -1,8 +1,9 @@
 package com.example.s1.controllers;
 
-import com.example.s1.services.FacultyService;
 import com.example.s1.model.*;
 import com.example.s1.repository.*;
+import com.example.s1.services.FacultyService;
+import com.example.s1.services.ReportService;
 import com.example.s1.utils.Fields;
 import com.example.s1.utils.InputValidator;
 import com.example.s1.utils.Path;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -40,6 +41,9 @@ public class FacultyController {
     GradeRepository gradeRepository;
     @Autowired
     ReportSheetRepository reportSheetRepository;
+    @Autowired
+    ReportService reportService;
+
 
     @GetMapping("/viewAllFaculties")
     public String list(HttpSession session, HttpServletRequest request) {
@@ -79,33 +83,8 @@ public class FacultyController {
                       @RequestParam(name = "name_ru") String nameRu,
                       @RequestParam(name = "budget_places") String budgetPlaces,
                       @RequestParam(name = "total_places") String totalPlaces,
-                      @RequestParam Long[] subjects
-    ) {
-        boolean valid = InputValidator.validateFacultyParameters(nameRu,
-                nameEn, budgetPlaces, totalPlaces);
-        if (!valid) {
-            //setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
-            log.error("errorMessage: Not all fields are properly filled");
-            return "redirect:addFaculty";
-        }
-        log.trace("All fields are properly filled. Start updating database.");
-        int total = Integer.parseInt(totalPlaces);
-        int budget = Integer.parseInt(budgetPlaces);
-        Faculty faculty = new Faculty(nameRu, nameEn, budget, total);
-        log.trace("Create faculty transfer object: {}", faculty);
-        facultyRepository.save(faculty);
-        log.trace("Create faculty record in database: {}", faculty);
-        // only after creating a faculty record we can proceed with
-        // adding faculty subjects
-        if (subjects != null) {
-            List<FacultySubjects> newFS = new ArrayList<>();
-            for (Long id : subjects) {
-                newFS.add(new FacultySubjects(id, faculty.getId()));
-            }
-            facultySubjectsRepository.saveAll(newFS);
-            log.trace("FacultySubjects record created in database: {}", newFS);
-        }
-        return "redirect:viewFaculty?name_en=" + nameEn;
+                      @RequestParam Long[] subjects) {
+        return facultyService.addFaculty(nameEn, nameRu, budgetPlaces, totalPlaces, subjects);
     }
 
     @PostMapping("/deleteFaculty")
@@ -123,7 +102,7 @@ public class FacultyController {
 
     @GetMapping("/editFaculty")
     public String editFaculty(@RequestParam(name = "name_en") String nameEn,
-                                ModelMap map) {
+                              ModelMap map) {
         Faculty faculty = facultyRepository.findByNameEn(nameEn);
         map.put(Fields.FACULTY_NAME_RU, faculty.getNameRu());
         log.trace("Set attribute 'name_ru': {}", faculty.getNameRu());
@@ -149,8 +128,7 @@ public class FacultyController {
                                   @RequestParam(name = "budget_places") String facultyBudgetPlaces,
                                   @RequestParam(name = "oldName") String oldFacultyName,
                                   @RequestParam(name = "oldCheckedSubjects") String[] oldCheckedSubjectsIds,
-                                  @RequestParam(name = "subjects") String[] newCheckedSubjectsIds
-                                  ) {
+                                  @RequestParam(name = "subjects") String[] newCheckedSubjectsIds) {
         // if user changes faculty name we need to know the old one
         // to update record in db
         boolean valid = InputValidator.validateFacultyParameters(nameRu,
@@ -171,7 +149,7 @@ public class FacultyController {
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
             log.error("Can not found user with id={}", userId);
-            return "redirect:/";
+            return Path.ERROR_PAGE;
         }
         map.put("first_name", user.getFirstName());
         log.trace("Set the request attribute: 'first_name' = {}", user.getFirstName());
@@ -197,39 +175,22 @@ public class FacultyController {
 
     @PostMapping("/viewApplicant")
     public String viewApplicantPost(@RequestParam Long id) {
-		Applicant applicant = applicantRepository.findById(id).orElse(null);
+        Applicant applicant = applicantRepository.findById(id).orElse(null);
         if (applicant == null) {
-            return "redirect:/";
+            return Path.WELCOME_PAGE;
         }
-		boolean updatedBlockedStatus = !applicant.isBlocked();
-		applicant.setBlocked(updatedBlockedStatus);
-		log.trace("Applicant with 'id' = {} and changed 'isBlocked' status = {}"
-				+ " record will be updated.", id, updatedBlockedStatus);
-		applicantRepository.save(applicant);
-		return Path.REDIRECT_APPLICANT_PROFILE + applicant.getUserId();
+        boolean updatedBlockedStatus = !applicant.isBlocked();
+        applicant.setBlocked(updatedBlockedStatus);
+        log.trace("Applicant with 'id' = {} and changed 'isBlocked' status = {}"
+                + " record will be updated.", id, updatedBlockedStatus);
+        applicantRepository.save(applicant);
+        return Path.REDIRECT_APPLICANT_PROFILE + applicant.getUserId();
     }
 
     @GetMapping("/applyFaculty")
-    public String applyFaculty (@RequestParam(name = "name_en") String nameEn,
-                                ModelMap map) {
-        Faculty faculty = facultyRepository.findByNameEn(nameEn);
-        map.put(Fields.ENTITY_ID, faculty.getId());
-        log.trace("Set the request faculty attribute: 'id' = {}", faculty.getId());
-        map.put(Fields.FACULTY_NAME_RU, faculty.getNameRu());
-        log.trace("Set the request attribute: 'name' = {}", faculty.getNameRu());
-        map.put(Fields.FACULTY_NAME_EN, faculty.getNameEn());
-        log.trace("Set the request attribute: 'name_en' = {}", faculty.getNameEn());
-        map.put(Fields.FACULTY_TOTAL_PLACES, faculty.getTotalPlaces());
-        log.trace("Set the request attribute: 'total_places' = {}", faculty.getTotalPlaces());
-        map.put(Fields.FACULTY_BUDGET_PLACES, faculty.getBudgetPlaces());
-        log.trace("Set the request attribute: 'budget_places' = {}", faculty.getBudgetPlaces());
-        Iterable<Subject> facultySubjects = subjectRepository.findAllByFacultyId(faculty.getId());
-        map.put("facultySubjects", facultySubjects);
-        log.trace("Set attribute 'facultySubjects': {}", facultySubjects);
-        Iterable<Subject> allSubjects = subjectRepository.findAll();
-        map.put("allSubjects", allSubjects);
-        log.trace("Set attribute 'allSubjects': {}", allSubjects);
-        return Path.FORWARD_FACULTY_APPLY_USER;
+    public String applyFaculty(@RequestParam(name = "name_en") String nameEn,
+                               ModelMap map) {
+        return facultyService.applyFacultyGet(nameEn, map);
     }
 
     @PostMapping("/applyFaculty")
@@ -242,32 +203,7 @@ public class FacultyController {
     @GetMapping("/createReport")
     public String createReport(@RequestParam Long id,
                                ModelMap map) {
-        List<ReportSheet> report = reportSheetRepository.findAllByFacultyId(id);
-        Faculty faculty = facultyRepository.findById(id).orElse(null);
-        if (faculty == null) {
-            log.error("Can not find faculty with id={}", id);
-            return Path.ERROR_PAGE;
-        }
-        int totalPlaces = faculty.getTotalPlaces();
-        int budgetPlaces = faculty.getBudgetPlaces();
-        for (int i = 0; i < report.size(); i++) {
-            ReportSheet sheet = report.get(i);
-            if ((i < totalPlaces) && !sheet.isBlocked()) {
-                sheet.setEntered(true);
-                sheet.setEnteredOnBudget(i < budgetPlaces);
-            } else {
-                sheet.setEntered(false);
-                sheet.setEnteredOnBudget(false);
-            }
-        }
-        map.put(Fields.FACULTY_NAME_RU, faculty.getNameRu());
-        log.trace("Set attribute 'name_ru': {}", faculty.getNameRu());
-        map.put(Fields.FACULTY_NAME_EN, faculty.getNameEn());
-        log.trace("Set attribute 'name_en': {}", faculty.getNameEn());
-        map.put("facultyReport", report);
-        log.trace("Set attribute 'facultyReport': {}", report);
-        return Path.FORWARD_REPORT_SHEET_VIEW;
-
+        return reportService.createReport(id, map);
     }
 
 }

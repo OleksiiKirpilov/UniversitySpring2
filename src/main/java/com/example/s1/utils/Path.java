@@ -15,8 +15,8 @@ public final class Path {
 	public static final String REDIRECT_ADMIN_REGISTRATION_PAGE = "redirect:/adminRegistration";
 
 	public static final String REDIRECT_TO_PROFILE = "redirect:/viewProfile";
-	public static final String REDIRECT_TO_FACULTY = "redirect:/viewFaculty&name_en=";
-	public static final String REDIRECT_TO_SUBJECT = "redirect:/viewSubject&name_en=";
+	public static final String REDIRECT_TO_FACULTY = "redirect:/viewFaculty?name_en=";
+	public static final String REDIRECT_TO_SUBJECT = "redirect:/viewSubject?name_en=";
 	public static final String REDIRECT_TO_VIEW_ALL_FACULTIES = "redirect:/viewAllFaculties";
 	public static final String REDIRECT_TO_VIEW_ALL_SUBJECTS = "redirect:/viewAllSubjects";
 
@@ -33,7 +33,7 @@ public final class Path {
 
 	public static final String FORWARD_FACULTY_VIEW_ADMIN = "/admin/admin_view_faculty";
 	public static final String FORWARD_FACULTY_EDIT_ADMIN = "/admin/admin_edit_faculty";
-	public static final String REDIRECT_FACULTY_EDIT_ADMIN = "redirect:/editFaculty&name_en=";
+	public static final String REDIRECT_FACULTY_EDIT_ADMIN = "redirect:/editFaculty?name_en=";
 	public static final String FORWARD_FACULTY_ADD_ADMIN = "/admin/admin_add_faculty";
 	public static final String REDIRECT_FACULTY_ADD_ADMIN = "redirect:/addFaculty";
 
@@ -45,10 +45,10 @@ public final class Path {
 	public static final String FORWARD_SUBJECT_ADD_ADMIN = "/WEB-INF/view/admin/subject/add.jsp";
 	public static final String REDIRECT_SUBJECT_ADD_ADMIN = "/WEB-INF/view/admin/subject/add.jsp";
 	public static final String FORWARD_SUBJECT_EDIT_ADMIN = "/WEB-INF/view/admin/subject/edit.jsp";
-	public static final String REDIRECT_SUBJECT_EDIT_ADMIN = "controller?command=editSubject&name_en=";
+	public static final String REDIRECT_SUBJECT_EDIT_ADMIN = "/editSubject?name_en=";
 
 	public static final String FORWARD_APPLICANT_PROFILE = "/WEB-INF/view/admin/applicant/view.jsp";
-	public static final String REDIRECT_APPLICANT_PROFILE = "/viewApplicant&userId=";
+	public static final String REDIRECT_APPLICANT_PROFILE = "/viewApplicant?userId=";
 
 	public static final String FORWARD_REPORT_SHEET_VIEW = "/WEB-INF/view/admin/report/view.jsp";
 

@@ -3,6 +3,7 @@ package com.example.s1.services;
 import com.example.s1.model.*;
 import com.example.s1.repository.*;
 import com.example.s1.utils.Fields;
+import com.example.s1.utils.InputValidator;
 import com.example.s1.utils.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,38 @@ public class FacultyService {
     FacultyApplicantsRepository facultyApplicantsRepository;
     @Autowired
     GradeRepository gradeRepository;
+
+
+    @Transactional
+    public String addFaculty(String nameEn, String nameRu,
+                             String budgetPlaces, String totalPlaces,
+                             Long[] subjects) {
+        boolean valid = InputValidator.validateFacultyParameters(nameRu,
+                nameEn, budgetPlaces, totalPlaces);
+        if (!valid) {
+            //setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
+            log.error("errorMessage: Not all fields are properly filled");
+            return "redirect:addFaculty";
+        }
+        log.trace("All fields are properly filled. Start updating database.");
+        int total = Integer.parseInt(totalPlaces);
+        int budget = Integer.parseInt(budgetPlaces);
+        Faculty faculty = new Faculty(nameRu, nameEn, budget, total);
+        log.trace("Create faculty transfer object: {}", faculty);
+        facultyRepository.save(faculty);
+        log.trace("Create faculty record in database: {}", faculty);
+        // only after creating a faculty record we can proceed with
+        // adding faculty subjects
+        if (subjects != null) {
+            List<FacultySubjects> newFS = new ArrayList<>();
+            for (Long id : subjects) {
+                newFS.add(new FacultySubjects(id, faculty.getId()));
+            }
+            facultySubjectsRepository.saveAll(newFS);
+            log.trace("FacultySubjects record created in database: {}", newFS);
+        }
+        return "redirect:viewFaculty?name_en=" + nameEn;
+    }
 
     @Transactional
     public String updateFaculty(String oldFacultyName,
@@ -138,6 +171,27 @@ public class FacultyService {
         map.put("facultyApplicants", facultyApplicants);
         log.trace("Set the request attribute: 'facultyApplicants' = {}", facultyApplicants);
         return Path.FORWARD_FACULTY_VIEW_ADMIN;
+    }
+
+    public String applyFacultyGet(String nameEn, ModelMap map) {
+        Faculty faculty = facultyRepository.findByNameEn(nameEn);
+        map.put(Fields.ENTITY_ID, faculty.getId());
+        log.trace("Set the request faculty attribute: 'id' = {}", faculty.getId());
+        map.put(Fields.FACULTY_NAME_RU, faculty.getNameRu());
+        log.trace("Set the request attribute: 'name' = {}", faculty.getNameRu());
+        map.put(Fields.FACULTY_NAME_EN, faculty.getNameEn());
+        log.trace("Set the request attribute: 'name_en' = {}", faculty.getNameEn());
+        map.put(Fields.FACULTY_TOTAL_PLACES, faculty.getTotalPlaces());
+        log.trace("Set the request attribute: 'total_places' = {}", faculty.getTotalPlaces());
+        map.put(Fields.FACULTY_BUDGET_PLACES, faculty.getBudgetPlaces());
+        log.trace("Set the request attribute: 'budget_places' = {}", faculty.getBudgetPlaces());
+        Iterable<Subject> facultySubjects = subjectRepository.findAllByFacultyId(faculty.getId());
+        map.put("facultySubjects", facultySubjects);
+        log.trace("Set attribute 'facultySubjects': {}", facultySubjects);
+        Iterable<Subject> allSubjects = subjectRepository.findAll();
+        map.put("allSubjects", allSubjects);
+        log.trace("Set attribute 'allSubjects': {}", allSubjects);
+        return Path.FORWARD_FACULTY_APPLY_USER;
     }
 
     @Transactional

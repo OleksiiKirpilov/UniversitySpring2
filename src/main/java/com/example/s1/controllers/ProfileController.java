@@ -5,6 +5,7 @@ import com.example.s1.model.Role;
 import com.example.s1.model.User;
 import com.example.s1.repository.ApplicantRepository;
 import com.example.s1.repository.UserRepository;
+import com.example.s1.services.ApplicantService;
 import com.example.s1.services.ProfileService;
 import com.example.s1.utils.InputValidator;
 import com.example.s1.utils.Path;
@@ -28,6 +29,8 @@ public class ProfileController {
     ApplicantRepository applicantRepository;
     @Autowired
     ProfileService profileService;
+    @Autowired
+    ApplicantService applicantService;
 
     @GetMapping("/login")
     public String loginGet() {
@@ -83,24 +86,16 @@ public class ProfileController {
         valid &= InputValidator.validateApplicantParameters(city, district, school);
         if (!valid) {
 //            setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
-            log.error("errorMessage: Not all fields are filled");
+            log.error("Not all fields are filled");
             return Path.REDIRECT_USER_REGISTRATION_PAGE;
         }
-        User user = new User(email, password, firstName, lastName, Role.USER.toString(), lang);
-        userRepository.save(user);
-        log.trace("User record created: {}", user);
-        Applicant applicant = new Applicant(city, district, school, user.getId(), false);
-        applicantRepository.save(applicant);
-        log.trace("Applicant record created: {}", applicant);
-
-        session.setAttribute("user", user.getEmail());
-        log.trace("Set session attribute 'user' = {}", user.getEmail());
-        session.setAttribute("userRole", user.getRole());
-        log.trace("Set session attribute: 'userRole' = {}", user.getRole());
-        session.setAttribute("lang", user.getLang());
-        log.trace("Set session attribute 'lang' = {}", user.getLang());
-        log.info("User: {} logged as {}", user, user.getRole());
-        return Path.REDIRECT_TO_PROFILE;
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            log.error("This email is already in use.");
+            return Path.REDIRECT_USER_REGISTRATION_PAGE;
+        }
+        user = new User(email, password, firstName, lastName, Role.USER.toString(), lang);
+        return applicantService.saveApplicant(session, user, city, district, school);
     }
 
     @GetMapping("/viewProfile")

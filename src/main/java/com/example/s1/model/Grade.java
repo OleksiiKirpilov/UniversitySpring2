@@ -33,6 +33,10 @@ public class Grade implements Serializable {
     @Column
     private String examType;
 
-    public Grade(Long subjectId, Long id, int gradeValue, String examType) {
+    public Grade(Long subjectId, Long applicantId, int gradeValue, String examType) {
+        this.subjectId = subjectId;
+        this.applicantId = applicantId;
+        this.grade = gradeValue;
+        this.examType = examType;
     }
 }
