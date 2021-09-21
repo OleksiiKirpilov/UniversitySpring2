@@ -6,12 +6,12 @@
 	<%@ include file="/WEB-INF/view/jspf/header.jspf"%>
 	<c:set var='view' value='/WEB-INF/view/user/faculty/view.jsp' scope='session' />
 	<h2 align="center">
-		<c:out value="${language eq 'ru' ? name_ru : name_en}"></c:out>
+		<c:out value="${lang eq 'ru' ? name_ru : name_en}"></c:out>
 	</h2>
 	<div class="view">
 		<p>
 			<label><fmt:message key="faculty.view_jsp.label.name" /></label>
-			<c:out value="${language eq 'ru' ? name_ru : name_en}"></c:out>
+			<c:out value="${lang eq 'ru' ? name_ru : name_en}"></c:out>
 		</p>
 		<p>
 			<label><fmt:message key="faculty.view_jsp.label.total_places" /></label>
@@ -34,7 +34,7 @@
 		<c:if test="${not empty facultySubjects}">
 			<ol>
 				<c:forEach var="subject" items="${facultySubjects}">
-					<li><c:out value="${language eq 'ru' ? subject.nameRu : subject.nameEn}"></c:out></li>
+					<li><c:out value="${lang eq 'ru' ? subject.nameRu : subject.nameEn}"></c:out></li>
 				</c:forEach>
 			</ol>
 		</c:if>

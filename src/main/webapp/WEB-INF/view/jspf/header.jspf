@@ -1,9 +1,5 @@
-<%@ include file="/WEB-INF/view/jspf/page.jspf" %>
-<%@ include file="/WEB-INF/view/jspf/taglib.jspf" %>
-
 <br>
 <br>
-
 <div class="menu">
     <a href="viewAllFaculties">
         <fmt:message key="header_jspf.anchor.faculties"/>
@@ -39,5 +35,3 @@
 <br>
 <br>
 <br>
-
-

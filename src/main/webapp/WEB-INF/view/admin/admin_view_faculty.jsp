@@ -11,7 +11,7 @@
 	<div class="view">
 		<p>
 			<label><fmt:message key="faculty.view_jsp.label.name" /> </label>
-			<c:out value="${language eq 'ru' ? name_ru : name_en}"></c:out>
+			<c:out value="${lang eq 'ru' ? name_ru : name_en}"></c:out>
 		</p>
 
 		<p>

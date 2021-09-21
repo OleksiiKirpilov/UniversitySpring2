@@ -1,7 +1,7 @@
 <%-- russian localization for datatables --%>
 <%@ attribute name="table" required="true" %>
 <script type="text/javascript">
-    var language = "${language}";
+    var language = "${lang}";
     $(document).ready(function () {
         $('${table}').dataTable({
             "language": {

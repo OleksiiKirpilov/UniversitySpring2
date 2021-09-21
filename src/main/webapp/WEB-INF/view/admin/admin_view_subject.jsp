@@ -8,7 +8,7 @@
 	<div class="view">
 		<p>
 			<label><fmt:message key="subject.view_jsp.label.name" /> </label>
-			<c:out value="${language eq 'ru' ? name_ru : name_en}"></c:out>
+			<c:out value="${lang eq 'ru' ? name_ru : name_en}"></c:out>
 		</p>
 		<a href="editSubject?name_en=${name_en}"><fmt:message
 				key="subject.view_jsp.button.edit" /></a> <br> <br>

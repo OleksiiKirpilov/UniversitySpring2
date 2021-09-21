@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
 
 @Slf4j
 @Controller
@@ -50,6 +51,7 @@ public class ProfileController {
         session.setAttribute("user", user.getEmail());
         session.setAttribute("userRole", user.getRole());
         session.setAttribute("lang", user.getLang());
+        Config.set(session, Config.FMT_LOCALE, new java.util.Locale(user.getLang()));
         return Path.REDIRECT_TO_VIEW_ALL_FACULTIES;
     }
 

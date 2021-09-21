@@ -9,10 +9,8 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h"%>
 <%--======================== JSTL i18n tag library. ========================--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-
 <%--======================== Switch ON i18n support ========================--%>
 <c:set var="language"
 	value="${not empty lang ? lang : pageContext.request.locale.language}"
-	scope="session" />
+		scope="session" />
 <fmt:setLocale value="${language}" />

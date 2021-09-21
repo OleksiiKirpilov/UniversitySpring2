@@ -203,8 +203,13 @@ public class FacultyService {
                 Long subjectId = Long.parseLong(subjectIdAndExamType[0]);
                 String examType = subjectIdAndExamType[1];
                 Grade grade = new Grade(subjectId, applicant.getId(), gradeValue, examType);
-                gradeRepository.save(grade);
-                log.trace("Grade record was created in database: {}", grade);
+                Grade oldgrade = gradeRepository
+                        .findBySubjectIdAndApplicantIdAndExamType(subjectId, applicant.getId(), examType);
+                if (oldgrade == null) {
+                    gradeRepository.save(grade);
+                    log.trace("Grade record was created in database: {}", grade);
+                } else
+                    log.trace("Grade already exists. {}", oldgrade);
             }
         }
         facultyApplicantsRepository.save(newFacultyApplicant);

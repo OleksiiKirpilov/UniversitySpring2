@@ -1,5 +1,6 @@
 package com.example.s1.controllers;
 
+import com.example.s1.utils.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ public class LocaleController {
             referer = "welcome";
         }
         return "redirect:" + referer;
+//        return Path.WELCOME_PAGE;
     }
 
 }

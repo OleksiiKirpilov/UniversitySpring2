@@ -4,13 +4,11 @@
 <%@ include file="/WEB-INF/view/jspf/head.jspf"%>
 <body>
 	<%@ include file="/WEB-INF/view/jspf/header.jspf"%>
-
 	<div class="header">
 		<fmt:message key="faculty.list_jsp.label.faculties_list" />
 	</div>
 	<p>
-		<a href="addFaculty"><fmt:message
-				key="faculty.list_jsp.button.add" /></a>
+		<a href="addFaculty"><fmt:message key="faculty.list_jsp.button.add" /></a>
 	</p>
 	<table id="facultiesTable" class="display">
 		<thead>
