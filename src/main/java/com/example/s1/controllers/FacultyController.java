@@ -78,7 +78,6 @@ public class FacultyController {
                       @RequestParam(name = "budget_places") String budgetPlaces,
                       @RequestParam(name = "total_places") String totalPlaces,
                       @RequestParam Long[] subjects) {
-
         return facultyService.addFaculty(nameEn, nameRu, budgetPlaces, totalPlaces, subjects);
     }
 

@@ -52,13 +52,11 @@ public class ProfileController {
                         @RequestParam String password,
                         HttpSession session) {
         User user = userRepository.findUserByEmailAndPassword(email, password);
-
         if (user == null) {
 //            setErrorMessage(request, ERROR_CAN_NOT_FIND_USER);
             log.error("errorMessage: Cannot find user with such login/password");
             return Path.WELCOME_PAGE;
         }
-
         List<SimpleGrantedAuthority> roles = new ArrayList<>();
         roles.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
         UsernamePasswordAuthenticationToken token =

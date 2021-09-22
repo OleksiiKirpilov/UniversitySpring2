@@ -17,7 +17,6 @@ public class LocaleController {
     public String setSessionLanguage(@RequestParam(name = "lang", defaultValue = "en") String lang,
                                      HttpSession session, HttpServletRequest request) {
         session.setAttribute("lang", lang);
-        log.trace("Set session attribute 'lang' = {}", lang);
         String referer = request.getHeader("Referer");
         if (referer == null) {
             referer = "welcome";
