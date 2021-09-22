@@ -4,7 +4,6 @@
 <%@ include file="/WEB-INF/view/jspf/head.jspf"%>
 <body>
 	<%@ include file="/WEB-INF/view/jspf/header.jspf"%>
-	<c:set var='view' value='/WEB-INF/view/admin/subject/view.jsp' scope='session' />
 	<div class="view">
 		<p>
 			<label><fmt:message key="subject.view_jsp.label.name" /> </label>

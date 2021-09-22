@@ -4,7 +4,6 @@
 <%@ include file="/WEB-INF/view/jspf/head.jspf"%>
 <body>
 	<%@ include file="/WEB-INF/view/jspf/header.jspf"%>
-	<c:set var='view' value='/WEB-INF/view/admin/subject/edit.jsp' scope='session' />
 	<div class="form">
 		<form id="edit_subject" method="POST" action="editSubject">
 			<input type="hidden" name="command" value="editSubject"> <input

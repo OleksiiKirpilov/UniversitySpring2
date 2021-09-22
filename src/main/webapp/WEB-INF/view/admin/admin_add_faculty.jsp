@@ -5,8 +5,6 @@
 <body>
 
 	<%@ include file="/WEB-INF/view/jspf/header.jspf"%>
-	<c:set var='view' value='/WEB-INF/view/admin/faculty/add.jsp' scope='session' />
-
 
 	<div class="form">
 

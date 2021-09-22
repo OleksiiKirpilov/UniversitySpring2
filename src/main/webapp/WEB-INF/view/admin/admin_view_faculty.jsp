@@ -4,7 +4,6 @@
 <%@ include file="/WEB-INF/view/jspf/head.jspf"%>
 <body>
 	<%@ include file="/WEB-INF/view/jspf/header.jspf"%>
-	<c:set var='view' value='/WEB-INF/view/admin/faculty/view.jsp' scope='session' />
 	<h2 align="center">
 		<c:out value="${lang eq 'ru' ? name_ru : name_en}"></c:out>
 	</h2>
