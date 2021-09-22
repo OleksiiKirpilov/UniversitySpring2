@@ -11,14 +11,22 @@ import com.example.s1.utils.InputValidator;
 import com.example.s1.utils.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -33,6 +41,7 @@ public class ProfileController {
     @Autowired
     ApplicantService applicantService;
 
+
     @GetMapping("/login")
     public String loginGet() {
         return Path.WELCOME_PAGE;
@@ -43,11 +52,21 @@ public class ProfileController {
                         @RequestParam String password,
                         HttpSession session) {
         User user = userRepository.findUserByEmailAndPassword(email, password);
+
         if (user == null) {
 //            setErrorMessage(request, ERROR_CAN_NOT_FIND_USER);
             log.error("errorMessage: Cannot find user with such login/password");
             return Path.WELCOME_PAGE;
         }
+
+        List<SimpleGrantedAuthority> roles = new ArrayList<>();
+        roles.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+        UsernamePasswordAuthenticationToken token =
+                new UsernamePasswordAuthenticationToken(email, password, roles);
+        SecurityContext sc = SecurityContextHolder.getContext();
+        sc.setAuthentication(token);
+        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, sc);
+
         session.setAttribute("user", user.getEmail());
         session.setAttribute("userRole", user.getRole());
         session.setAttribute("lang", user.getLang());
@@ -55,7 +74,7 @@ public class ProfileController {
         return Path.REDIRECT_TO_VIEW_ALL_FACULTIES;
     }
 
-    @GetMapping("/logout")
+    @RequestMapping("/logout")
     public String logout(HttpSession session) {
         if (session != null) {
             session.invalidate();

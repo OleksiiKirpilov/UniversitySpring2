@@ -119,10 +119,9 @@ public class FacultyService {
         if (!existingRecords.isEmpty()) {
             for (String subjectToRemove : existingRecords) {
                 Long subjectId = Long.parseLong(subjectToRemove);
-                FacultySubjects facultySubjectRecordToDelete =
-                        new FacultySubjects(subjectId, faculty.getId());
-                facultySubjectsRepository.delete(facultySubjectRecordToDelete);
-                log.trace("Faculty subjects record was deleted: {}", facultySubjectRecordToDelete);
+                facultySubjectsRepository.deleteByFacultyIdAndSubjectId(faculty.getId(), subjectId);
+                log.trace("Faculty subjects record was deleted: facultyId={}, subjectId={}",
+                        faculty.getId(), subjectId);
             }
         }
         return Path.REDIRECT_TO_FACULTY + nameEn;

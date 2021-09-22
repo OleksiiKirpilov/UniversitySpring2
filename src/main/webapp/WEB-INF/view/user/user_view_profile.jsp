@@ -33,7 +33,7 @@
 			<c:out value="${requestScope.school}"></c:out>
 		</p>
 		<a
-			href="editProfile?show=true&user=${requestScope.email}"><fmt:message
+			href="editProfile?user=${requestScope.email}"><fmt:message
 				key="profile.view_jsp.button.edit" /></a> <br> <br>
 
 		<form action="logout" method="POST">
