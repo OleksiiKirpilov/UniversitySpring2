@@ -7,20 +7,20 @@
 	<div class="form">
 		<form id="edit_subject" method="POST" action="editSubject">
 			<input type="hidden" name="command" value="editSubject"> <input
-				type="hidden" name="oldName" value="${name_en}">
+				type="hidden" name="oldName" value="${subject.nameEn}">
 
 			<div class="field">
 				<p>
 					<label for="name_ru"><fmt:message
 							key="subject.edit_jsp.label.name" /> (ru)</label> <input type="text"
-						name="name_ru" id="name_ru" value="${name_ru}" required>
+						name="name_ru" id="name_ru" value="${subject.nameRu}" required>
 				</p>
 			</div>
 			<div class="field">
 				<p>
 					<label for="name_en"><fmt:message
 							key="subject.edit_jsp.label.name" /> (en)</label> <input type="text"
-						name="name_en" id="name_en" value="${name_en}" required>
+						name="name_en" id="name_en" value="${subject.nameEn}" required>
 				</p>
 			</div>
 			<p>
@@ -30,7 +30,7 @@
 		</form>
 
 		<p>
-			<a href="viewSubject?name_en=${name_en}"><fmt:message
+			<a href="viewSubject?name_en=${subject.nameEn}"><fmt:message
 					key="subject.edit_jsp.button.back" /></a>
 		</p>
 	</div>

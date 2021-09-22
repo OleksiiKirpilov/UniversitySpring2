@@ -4,10 +4,9 @@
 <%@ include file="/WEB-INF/view/jspf/head.jspf"%>
 <body>
 	<%@ include file="/WEB-INF/view/jspf/header.jspf"%>
-	<c:set var='view' value='/WEB-INF/view/user/faculty/apply.jsp' scope='session' />
 
 	<h2 align="center">
-		<c:out value="${lang eq 'ru' ? name_ru : name_en}"></c:out>
+		<c:out value="${lang eq 'ru' ? faculty.nameRu : faculty.nameEn}"></c:out>
 	</h2>
 
 	<br>
@@ -17,27 +16,27 @@
 		<p>
 			<label><fmt:message key="faculty.apply_jsp.label.name" /></label>
 
-			<c:out value="${lang eq 'ru' ? name_ru : name_en}"></c:out>
+			<c:out value="${lang eq 'ru' ? faculty.nameRu : faculty.nameEn}"></c:out>
 		</p>
 		<p>
 			<label> <fmt:message
 					key="faculty.apply_jsp.label.total_places" />
 			</label>
 
-			<c:out value="${total_places}"></c:out>
+			<c:out value="${faculty.totalPlaces}"></c:out>
 		</p>
 		<p>
 			<label><fmt:message
 					key="faculty.apply_jsp.label.budget_places" /> </label>
 
-			<c:out value="${budget_places}"></c:out>
+			<c:out value="${faculty.budgetPlaces}"></c:out>
 		</p>
 	</div>
 
 	<div class="form">
 		<form action="applyFaculty" method="POST">
 			<input type="hidden" name="command" value="applyFaculty" /> <input
-				type="hidden" name="id" value="${id}" />
+				type="hidden" name="id" value="${faculty.id}" />
 
 			<h2>
 				<fmt:message key="faculty.apply_jsp.label.preliminary_subjects" />

@@ -129,11 +129,7 @@ public class FacultyService {
 
     public String viewFaculty(String nameEn, ModelMap map, HttpSession session) {
         Faculty facultyRecord = facultyRepository.findByNameEn(nameEn);
-        map.put(Fields.ENTITY_ID, facultyRecord.getId());
-        map.put(Fields.FACULTY_NAME_RU, facultyRecord.getNameRu());
-        map.put(Fields.FACULTY_NAME_EN, facultyRecord.getNameEn());
-        map.put(Fields.FACULTY_TOTAL_PLACES, facultyRecord.getTotalPlaces());
-        map.put(Fields.FACULTY_BUDGET_PLACES, facultyRecord.getBudgetPlaces());
+        map.put("faculty", facultyRecord);
 
         Iterable<Subject> facultySubjects = subjectRepository.findAllByFacultyId(facultyRecord.getId());
         map.put("facultySubjects", facultySubjects);
@@ -161,11 +157,7 @@ public class FacultyService {
 
     public String applyFacultyGet(String nameEn, ModelMap map) {
         Faculty faculty = facultyRepository.findByNameEn(nameEn);
-        map.put(Fields.ENTITY_ID, faculty.getId());
-        map.put(Fields.FACULTY_NAME_RU, faculty.getNameRu());
-        map.put(Fields.FACULTY_NAME_EN, faculty.getNameEn());
-        map.put(Fields.FACULTY_TOTAL_PLACES, faculty.getTotalPlaces());
-        map.put(Fields.FACULTY_BUDGET_PLACES, faculty.getBudgetPlaces());
+        map.put("faculty", faculty);
         Iterable<Subject> facultySubjects = subjectRepository.findAllByFacultyId(faculty.getId());
         map.put("facultySubjects", facultySubjects);
         Iterable<Subject> allSubjects = subjectRepository.findAll();

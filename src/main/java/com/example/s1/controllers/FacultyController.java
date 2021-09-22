@@ -78,6 +78,7 @@ public class FacultyController {
                       @RequestParam(name = "budget_places") String budgetPlaces,
                       @RequestParam(name = "total_places") String totalPlaces,
                       @RequestParam Long[] subjects) {
+
         return facultyService.addFaculty(nameEn, nameRu, budgetPlaces, totalPlaces, subjects);
     }
 
@@ -98,10 +99,7 @@ public class FacultyController {
     public String editFaculty(@RequestParam(name = "name_en") String nameEn,
                               ModelMap map) {
         Faculty faculty = facultyRepository.findByNameEn(nameEn);
-        map.put(Fields.FACULTY_NAME_RU, faculty.getNameRu());
-        map.put(Fields.FACULTY_NAME_EN, faculty.getNameEn());
-        map.put(Fields.FACULTY_TOTAL_PLACES, faculty.getTotalPlaces());
-        map.put(Fields.FACULTY_BUDGET_PLACES, faculty.getBudgetPlaces());
+        map.put("faculty", faculty);
         Iterable<Subject> otherSubjects = subjectRepository.findAllByFacultyIdNotEquals(faculty.getId());
         map.put("otherSubjects", otherSubjects);
         Iterable<Subject> facultySubjects = subjectRepository.findAllByFacultyId(faculty.getId());
@@ -139,17 +137,9 @@ public class FacultyController {
             log.error("Can not found user with id={}", userId);
             return Path.ERROR_PAGE;
         }
-        map.put("first_name", user.getFirstName());
-        map.put("last_name", user.getLastName());
-        map.put("email", user.getEmail());
-        map.put("role", user.getRole());
-
+        map.put("user", user);
         Applicant applicant = applicantRepository.findByUserId(user.getId());
-        map.put(Fields.ENTITY_ID, applicant.getId());
-        map.put(Fields.APPLICANT_CITY, applicant.getCity());
-        map.put(Fields.APPLICANT_DISTRICT, applicant.getDistrict());
-        map.put(Fields.APPLICANT_SCHOOL, applicant.getSchool());
-        map.put(Fields.APPLICANT_IS_BLOCKED, applicant.isBlocked());
+        map.put("applicant", applicant);
         return Path.FORWARD_APPLICANT_PROFILE;
     }
 

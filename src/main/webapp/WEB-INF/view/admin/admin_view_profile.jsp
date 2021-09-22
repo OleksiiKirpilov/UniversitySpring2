@@ -9,18 +9,18 @@
 		<p>
 			<label><fmt:message key="profile.view_jsp.label.first_name" />
 			</label>
-			<c:out value="${requestScope.first_name}"></c:out>
+			<c:out value="${user.firstName}"></c:out>
 		</p>
 		<p>
 			<label><fmt:message key="profile.view_jsp.label.last_name" />
 			</label>
-			<c:out value="${requestScope.last_name}"></c:out>
+			<c:out value="${user.lastName}"></c:out>
 		</p>
 		<p>
 			<label><fmt:message key="profile.view_jsp.label.email" /> </label>
-			<c:out value="${requestScope.email}"></c:out>
+			<c:out value="${user.email}"></c:out>
 		</p>
-		<a href="editProfile?user=${requestScope.email}"><fmt:message
+		<a href="editProfile?user=${user.email}"><fmt:message
 				key="profile.view_jsp.button.edit" /></a> <br>
 		<p>
 			<a href="adminRegistration"><fmt:message

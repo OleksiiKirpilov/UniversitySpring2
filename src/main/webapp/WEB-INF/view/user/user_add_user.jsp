@@ -4,7 +4,6 @@
 <%@ include file="/WEB-INF/view/jspf/head.jspf"%>
 <body>
 	<%@ include file="/WEB-INF/view/jspf/header.jspf"%>
-	<c:set var='view' value='/WEB-INF/view/user/addUser.jsp' scope='session' />
 	<div class="header">
 		<fmt:message key="registration.label.enter_info_msg" />
 	</div>

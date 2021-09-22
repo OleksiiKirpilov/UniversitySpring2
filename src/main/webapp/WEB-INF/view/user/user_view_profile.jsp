@@ -4,36 +4,35 @@
 <%@ include file="/WEB-INF/view/jspf/head.jspf"%>
 <body>
 	<%@ include file="/WEB-INF/view/jspf/header.jspf"%>
-	<c:set var='view' value='/WEB-INF/view/user/profile/view.jsp' scope='session' />
 	<div class="view">
 		<p>
 			<label><fmt:message key="profile.view_jsp.label.first_name" />
 			</label>
-			<c:out value="${requestScope.first_name}"></c:out>
+			<c:out value="${user.firstName}"></c:out>
 		</p>
 		<p>
 			<label><fmt:message key="profile.view_jsp.label.last_name" />
 			</label>
-			<c:out value="${requestScope.last_name}"></c:out>
+			<c:out value="${user.lastName}"></c:out>
 		</p>
 		<p>
 			<label><fmt:message key="profile.view_jsp.label.email" /> </label>
-			<c:out value="${requestScope.email}"></c:out>
+			<c:out value="${user.email}"></c:out>
 		</p>
 		<p>
 			<label><fmt:message key="profile.view_jsp.label.city" /></label>
-			<c:out value="${requestScope.city}"></c:out>
+			<c:out value="${applicant.city}"></c:out>
 		</p>
 		<p>
 			<label><fmt:message key="profile.view_jsp.label.district" /></label>
-			<c:out value="${requestScope.district}"></c:out>
+			<c:out value="${applicant.district}"></c:out>
 		</p>
 		<p>
 			<label><fmt:message key="profile.view_jsp.label.school" /></label>
-			<c:out value="${requestScope.school}"></c:out>
+			<c:out value="${applicant.school}"></c:out>
 		</p>
 		<a
-			href="editProfile?user=${requestScope.email}"><fmt:message
+			href="editProfile?user=${user.email}"><fmt:message
 				key="profile.view_jsp.button.edit" /></a> <br> <br>
 
 		<form action="logout" method="POST">

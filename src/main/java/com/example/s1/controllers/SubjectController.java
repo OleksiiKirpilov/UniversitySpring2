@@ -45,9 +45,7 @@ public class SubjectController {
     public String viewSubject(@RequestParam(name = "name_en") String nameEn,
                               ModelMap map) {
         Subject subject = subjectRepository.findSubjectByNameEnEquals(nameEn);
-        map.put(Fields.ENTITY_ID, subject.getId());
-        map.put(Fields.SUBJECT_NAME_RU, subject.getNameRu());
-        map.put(Fields.SUBJECT_NAME_EN, subject.getNameEn());
+        map.put("subject", subject);
         return Path.FORWARD_SUBJECT_VIEW_ADMIN;
     }
 
@@ -112,8 +110,7 @@ public class SubjectController {
     public String editGet(@RequestParam(name = "name_en") String nameEn,
                           ModelMap map) {
         Subject subject = subjectRepository.findSubjectByNameEnEquals(nameEn);
-        map.put(Fields.SUBJECT_NAME_RU, subject.getNameRu());
-        map.put(Fields.SUBJECT_NAME_EN, subject.getNameEn());
+        map.put("subject", subject);
         return Path.FORWARD_SUBJECT_EDIT_ADMIN;
     }
 

@@ -117,19 +117,14 @@ public class ProfileController {
     public String viewProfile(HttpSession session, ModelMap map) {
         String userEmail = String.valueOf(session.getAttribute("user"));
         User user = userRepository.findByEmail(userEmail);
-        map.put("first_name", user.getFirstName());
-        map.put("last_name", user.getLastName());
-        map.put("email", user.getEmail());
-        map.put("role", user.getRole());
+        map.put("user", user);
         String role = user.getRole();
         if (Role.isAdmin(role)) {
             return Path.FORWARD_ADMIN_PROFILE;
         }
         if (Role.isUser(role)) {
             Applicant applicant = applicantRepository.findByUserId(user.getId());
-            map.put("city", applicant.getCity());
-            map.put("district", applicant.getDistrict());
-            map.put("school", applicant.getSchool());
+            map.put("applicant", applicant);
             return Path.FORWARD_USER_PROFILE;
         }
         return Path.WELCOME_PAGE;

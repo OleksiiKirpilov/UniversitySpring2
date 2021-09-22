@@ -6,24 +6,24 @@
 	<%@ include file="/WEB-INF/view/jspf/header.jspf"%>
 
 	<h2 align="center">
-		<c:out value="${faculty.name}" />
+		<c:out value="${lang eq 'ru' ? faculty.nameRu : faculty.nameEn}" />
 	</h2>
 
 	<div class="form">
 		<form id="edit_faculty" action="editFaculty" method="POST" onsubmit="return validate();">
 			<input type="hidden" name="command" value="editFaculty" /> <input
-				type="hidden" name="oldName" value="${requestScope.name_en}" />
+				type="hidden" name="oldName" value="${faculty.nameEn}" />
 			<div class="field">
 				<label for="name_ru"><fmt:message
 						key="faculty.edit_jsp.label.name" /></label> <input type="text"
-					name="name_ru" id="name_ru" value="${requestScope.name_ru}"
+					name="name_ru" id="name_ru" value="${faculty.nameRu}"
 					required />
 			</div>
 			<div class="field">
 				<label for="name_en">
 					<fmt:message key="faculty.edit_jsp.label.name" />
 				</label>
-				<input type="text" name="name_en" id="name_en" value="${requestScope.name_en}"
+				<input type="text" name="name_en" id="name_en" value="${faculty.nameEn}"
 				required />
 			</div>
 			<div class="field">
@@ -31,17 +31,17 @@
 					<fmt:message key="faculty.edit_jsp.label.total_places" />
 				</label>
 				<input type="number" name="total_places" id="total_places"
-					   value="${requestScope.total_places}" min="1" max="1000" step="1" required />
+					   value="${faculty.totalPlaces}" min="1" max="1000" step="1" required />
 			</div>
 			<div class="field">
 				<label for="budget_places">
 					<fmt:message key="faculty.edit_jsp.label.budget_places" />
 				</label>
 				<input type="number" name="budget_places" id="budget_places"
-					   value="${requestScope.budget_places}" min="0" max="200" step="1" required />
+					   value="${faculty.budgetPlaces}" min="0" max="200" step="1" required />
 			</div>
 			<p>
-				<a href="viewFaculty?name_en=${requestScope.name_en}">
+				<a href="viewFaculty?name_en=${faculty.nameEn}">
 					<fmt:message key="profile.edit_jsp.button.back" />
 				</a>
 			</p>
