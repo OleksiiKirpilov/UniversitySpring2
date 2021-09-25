@@ -2,9 +2,9 @@ package com.example.s1.controllers;
 
 import com.example.s1.model.*;
 import com.example.s1.repository.*;
+import com.example.s1.services.ApplicantService;
 import com.example.s1.services.FacultyService;
 import com.example.s1.services.ReportService;
-import com.example.s1.utils.Fields;
 import com.example.s1.utils.InputValidator;
 import com.example.s1.utils.Path;
 import lombok.extern.slf4j.Slf4j;
@@ -35,27 +35,18 @@ public class FacultyController {
     @Autowired
     FacultyApplicantsRepository facultyApplicantsRepository;
     @Autowired
-    FacultyService facultyService;
-    @Autowired
     GradeRepository gradeRepository;
     @Autowired
     ReportSheetRepository reportSheetRepository;
     @Autowired
     ReportService reportService;
+    @Autowired
+    FacultyService facultyService;
 
 
     @GetMapping("/viewAllFaculties")
     public String list(HttpSession session, HttpServletRequest request) {
-        Iterable<Faculty> faculties = facultyRepository.findAll();
-        request.setAttribute("faculties", faculties);
-        String role = (String) session.getAttribute("userRole");
-        if (role == null || Role.isUser(role)) {
-            return Path.FORWARD_FACULTY_VIEW_ALL_USER;
-        }
-        if (Role.isAdmin(role)) {
-            return Path.FORWARD_FACULTY_VIEW_ALL_ADMIN;
-        }
-        return Path.WELCOME_PAGE;
+        return facultyService.viewAllFaculties(session, request);
     }
 
     @GetMapping("/viewFaculty")
@@ -83,15 +74,7 @@ public class FacultyController {
 
     @PostMapping("/deleteFaculty")
     public String deleteFaculty(@RequestParam Long id) {
-        Faculty facultyToDelete = facultyRepository.findById(id).orElse(null);
-        Iterable<Applicant> facultyApplicants = applicantRepository.findAllByFacultyId(id);
-        if (facultyApplicants != null) {
-//            setErrorMessage(request, ERROR_FACULTY_DEPENDS);
-            return Path.REDIRECT_TO_FACULTY + facultyToDelete.getNameEn();
-        }
-        facultyRepository.delete(facultyToDelete);
-        log.trace("Delete faculty record in database: {}", facultyToDelete);
-        return Path.REDIRECT_TO_VIEW_ALL_FACULTIES;
+        return facultyService.deleteFaculty(id);
     }
 
     @GetMapping("/editFaculty")
@@ -128,45 +111,17 @@ public class FacultyController {
                 facultyBudgetPlaces, oldCheckedSubjectsIds, newCheckedSubjectsIds);
     }
 
-    @GetMapping("/viewApplicant")
-    public String viewApplicant(@RequestParam Long userId,
-                                ModelMap map) {
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) {
-            log.error("Can not found user with id={}", userId);
-            return Path.ERROR_PAGE;
-        }
-        map.put("user", user);
-        Applicant applicant = applicantRepository.findByUserId(user.getId());
-        map.put("applicant", applicant);
-        return Path.FORWARD_APPLICANT_PROFILE;
-    }
-
-    @PostMapping("/viewApplicant")
-    public String viewApplicantPost(@RequestParam Long id) {
-        Applicant applicant = applicantRepository.findById(id).orElse(null);
-        if (applicant == null) {
-            return Path.WELCOME_PAGE;
-        }
-        boolean updatedBlockedStatus = !applicant.isBlocked();
-        applicant.setBlocked(updatedBlockedStatus);
-        log.trace("Applicant with 'id' = {} and changed 'blocked' status = {}"
-                + " record will be updated.", id, updatedBlockedStatus);
-        applicantRepository.save(applicant);
-        return Path.REDIRECT_APPLICANT_PROFILE + applicant.getUserId();
-    }
-
     @GetMapping("/applyFaculty")
     public String applyFaculty(@RequestParam(name = "name_en") String nameEn,
                                ModelMap map) {
-        return facultyService.applyFacultyGet(nameEn, map);
+        return facultyService.applyFacultyGetInfo(nameEn, map);
     }
 
     @PostMapping("/applyFaculty")
     public String applyFacultyPost(HttpSession session,
                                    @RequestParam(name = "id") Long facultyId,
                                    HttpServletRequest request) {
-        return facultyService.applyFacultyPost(session, facultyId, request);
+        return facultyService.applyFaculty(session, facultyId, request);
     }
 
     @GetMapping("/createReport")

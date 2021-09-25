@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
 
 @Slf4j
 @Controller
@@ -21,6 +22,7 @@ public class LocaleController {
         if (referer == null) {
             referer = "welcome";
         }
+        Config.set(session, Config.FMT_LOCALE, new java.util.Locale(lang));
         return "redirect:" + referer;
 //        return Path.WELCOME_PAGE;
     }

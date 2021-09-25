@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -34,5 +35,32 @@ public class ApplicantService {
         log.info("User: {} logged as {}", user, user.getRole());
         return Path.REDIRECT_TO_PROFILE;
     }
+
+    public String updateApplicantStatus(Long id) {
+        Applicant applicant = applicantRepository.findById(id).orElse(null);
+        if (applicant == null) {
+            log.error("Applicant with 'id' = {} not found.", id);
+            return Path.WELCOME_PAGE;
+        }
+        boolean updatedBlockedStatus = !applicant.isBlocked();
+        applicant.setBlocked(updatedBlockedStatus);
+        log.trace("Applicant with 'id' = {} and changed 'blocked' status = {}"
+                + " record will be updated.", id, updatedBlockedStatus);
+        applicantRepository.save(applicant);
+        return Path.REDIRECT_APPLICANT_PROFILE + applicant.getUserId();
+    }
+
+    public String viewApplicant(Long userId, ModelMap map) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            log.error("Can not found user with id = {}", userId);
+            return Path.ERROR_PAGE;
+        }
+        map.put("user", user);
+        Applicant applicant = applicantRepository.findByUserId(user.getId());
+        map.put("applicant", applicant);
+        return Path.FORWARD_APPLICANT_PROFILE;
+    }
+
 
 }

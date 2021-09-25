@@ -1,6 +1,5 @@
 package com.example.s1.controllers;
 
-import com.example.s1.model.Applicant;
 import com.example.s1.model.Role;
 import com.example.s1.model.User;
 import com.example.s1.repository.ApplicantRepository;
@@ -11,11 +10,6 @@ import com.example.s1.utils.InputValidator;
 import com.example.s1.utils.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.jstl.core.Config;
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -43,7 +34,7 @@ public class ProfileController {
 
 
     @GetMapping("/login")
-    public String loginGet() {
+    public String welcome() {
         return Path.WELCOME_PAGE;
     }
 
@@ -51,25 +42,7 @@ public class ProfileController {
     public String login(@RequestParam String email,
                         @RequestParam String password,
                         HttpSession session) {
-        User user = userRepository.findUserByEmailAndPassword(email, password);
-        if (user == null) {
-//            setErrorMessage(request, ERROR_CAN_NOT_FIND_USER);
-            log.error("errorMessage: Cannot find user with such login/password");
-            return Path.WELCOME_PAGE;
-        }
-        List<SimpleGrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
-        UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(email, password, roles);
-        SecurityContext sc = SecurityContextHolder.getContext();
-        sc.setAuthentication(token);
-        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, sc);
-
-        session.setAttribute("user", user.getEmail());
-        session.setAttribute("userRole", user.getRole());
-        session.setAttribute("lang", user.getLang());
-        Config.set(session, Config.FMT_LOCALE, new java.util.Locale(user.getLang()));
-        return Path.REDIRECT_TO_VIEW_ALL_FACULTIES;
+        return profileService.login(email, password, session);
     }
 
     @RequestMapping("/logout")
@@ -81,18 +54,18 @@ public class ProfileController {
     }
 
     @GetMapping("/userRegistration")
-    public String addUser() {
+    public String registrationPage() {
         return Path.FORWARD_USER_REGISTRATION_PAGE;
     }
 
     @PostMapping("/userRegistration")
-    public String addUserPost(@RequestParam String email, @RequestParam String password,
-                              @RequestParam(name = "first_name") String firstName,
-                              @RequestParam(name = "last_name") String lastName,
-                              @RequestParam String lang,
-                              @RequestParam String city, @RequestParam String district,
-                              @RequestParam String school,
-                              HttpSession session
+    public String addUser(@RequestParam String email, @RequestParam String password,
+                          @RequestParam(name = "first_name") String firstName,
+                          @RequestParam(name = "last_name") String lastName,
+                          @RequestParam String lang,
+                          @RequestParam String city, @RequestParam String district,
+                          @RequestParam String school,
+                          HttpSession session
 
     ) {
         boolean valid = InputValidator.validateUserParameters(firstName, lastName, email, password, lang);
@@ -113,19 +86,7 @@ public class ProfileController {
 
     @GetMapping("/viewProfile")
     public String viewProfile(HttpSession session, ModelMap map) {
-        String userEmail = String.valueOf(session.getAttribute("user"));
-        User user = userRepository.findByEmail(userEmail);
-        map.put("user", user);
-        String role = user.getRole();
-        if (Role.isAdmin(role)) {
-            return Path.FORWARD_ADMIN_PROFILE;
-        }
-        if (Role.isUser(role)) {
-            Applicant applicant = applicantRepository.findByUserId(user.getId());
-            map.put("applicant", applicant);
-            return Path.FORWARD_USER_PROFILE;
-        }
-        return Path.WELCOME_PAGE;
+        return profileService.viewProfile(session, map);
     }
 
     @GetMapping("/adminRegistration")
@@ -154,7 +115,7 @@ public class ProfileController {
 
     @GetMapping("/editProfile")
     public String editProfile(HttpSession session, ModelMap map) {
-        return profileService.editProfileGet(session, map);
+        return profileService.editProfilePage(session, map);
     }
 
     @PostMapping("/editProfile")
@@ -169,7 +130,7 @@ public class ProfileController {
                                   @RequestParam(required = false) String district,
                                   @RequestParam(required = false) String school
     ) {
-        return profileService.editProfilePost(oldEmail, firstName, lastName, email, password, lang,
+        return profileService.editProfile(oldEmail, firstName, lastName, email, password, lang,
                 session, city, district, school);
     }
 

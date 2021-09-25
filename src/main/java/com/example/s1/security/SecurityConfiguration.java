@@ -1,5 +1,6 @@
 package com.example.s1.security;
 
+import com.example.s1.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -38,25 +39,27 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/user/user_view_faculty").permitAll()
                 .antMatchers("/user/user_add_user").permitAll()
-                .antMatchers("/admin/**").hasRole("admin")
-                .antMatchers("/user/**").hasRole("user")
+                .antMatchers("/admin/**").hasRole(Role.ADMIN_ROLE_NAME)
+                .antMatchers("/user/**",
+                        "/applyFaculty").hasRole(Role.USER_ROLE_NAME)
                 .antMatchers(
                         "/adminRegistration",
                         "/viewAllSubjects",
+                        "/viewSubject",
                         "/editFaculty",
                         "/addFaculty",
                         "/editSubject",
                         "/viewApplicant"
-                            ).hasRole("admin")
-                .antMatchers("/editProfile").hasAnyRole("admin", "user")
+                            ).hasRole(Role.ADMIN_ROLE_NAME)
+                .antMatchers(
+                        "/editProfile",
+                        "/viewProfile"
+                            ).hasAnyRole(Role.ADMIN_ROLE_NAME, Role.USER_ROLE_NAME)
                 .antMatchers("/").permitAll()
-//                .and().formLogin()
-//                .loginPage("/login")
-//                .loginProcessingUrl("/login")
-//                .usernameParameter("email")
-//                .passwordParameter("password")
-//                .permitAll()
-//                .defaultSuccessUrl("/login")
+//                .and().formLogin().loginPage("/").permitAll()
+//                .usernameParameter("email").passwordParameter("password")
+//                .loginProcessingUrl("/l")
+//                .successForwardUrl("/")
         ;
     }
 

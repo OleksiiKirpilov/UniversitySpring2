@@ -10,11 +10,19 @@ import com.example.s1.utils.InputValidator;
 import com.example.s1.utils.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -25,7 +33,45 @@ public class ProfileService {
     @Autowired
     ApplicantRepository applicantRepository;
 
-    public String editProfileGet(HttpSession session, ModelMap map) {
+
+    public String login(String email, String password, HttpSession session) {
+        User user = userRepository.findUserByEmailAndPassword(email, password);
+        if (user == null) {
+//            setErrorMessage(request, ERROR_CAN_NOT_FIND_USER);
+            log.error("errorMessage: Cannot find user with such login/password");
+            return Path.WELCOME_PAGE;
+        }
+        List<SimpleGrantedAuthority> roles = new ArrayList<>();
+        roles.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+        UsernamePasswordAuthenticationToken token =
+                new UsernamePasswordAuthenticationToken(email, password, roles);
+        SecurityContext sc = SecurityContextHolder.getContext();
+        sc.setAuthentication(token);
+        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, sc);
+        session.setAttribute("user", user.getEmail());
+        session.setAttribute("userRole", user.getRole());
+        session.setAttribute("lang", user.getLang());
+        Config.set(session, Config.FMT_LOCALE, new java.util.Locale(user.getLang()));
+        return Path.REDIRECT_TO_VIEW_ALL_FACULTIES;
+    }
+
+    public String viewProfile(HttpSession session, ModelMap map) {
+        String userEmail = String.valueOf(session.getAttribute("user"));
+        User user = userRepository.findByEmail(userEmail);
+        map.put("user", user);
+        String role = user.getRole();
+        if (Role.isAdmin(role)) {
+            return Path.FORWARD_ADMIN_PROFILE;
+        }
+        if (Role.isUser(role)) {
+            Applicant applicant = applicantRepository.findByUserId(user.getId());
+            map.put("applicant", applicant);
+            return Path.FORWARD_USER_PROFILE;
+        }
+        return Path.WELCOME_PAGE;
+    }
+
+    public String editProfilePage(HttpSession session, ModelMap map) {
         String userEmail = String.valueOf(session.getAttribute("user"));
         String role = String.valueOf(session.getAttribute("userRole"));
         User user = userRepository.findByEmail(userEmail);
@@ -50,9 +96,9 @@ public class ProfileService {
     }
 
     @Transactional
-    public String editProfilePost(String oldEmail, String firstName, String lastName, String email,
-                                  String password, String lang, HttpSession session,
-                                  String city, String district, String school) {
+    public String editProfile(String oldEmail, String firstName, String lastName, String email,
+                              String password, String lang, HttpSession session,
+                              String city, String district, String school) {
         boolean valid = InputValidator.validateUserParameters(
                 firstName, lastName, email, password, lang);
         String role = String.valueOf(session.getAttribute("userRole"));

@@ -51,19 +51,6 @@ public class ContextListener implements ServletContextListener {
         log.debug("Application attribute set: 'locales' = {}", locales);
         servletContext.setAttribute("locales", locales);
         log.debug("I18N subsystem initialization finished");
-
-    }
-
-    /**
-     * Initializes CommandManager.
-     */
-    private void initCommandManager() {
-        try {
-            Class.forName("com.example.university.commands.CommandManager");
-        } catch (ClassNotFoundException ex) {
-            throw new IllegalStateException(
-                    "Cannot initialize Command Manager", ex);
-        }
     }
 
 }

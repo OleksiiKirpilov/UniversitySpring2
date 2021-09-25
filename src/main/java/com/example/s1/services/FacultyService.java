@@ -36,6 +36,19 @@ public class FacultyService {
     GradeRepository gradeRepository;
 
 
+    public String viewAllFaculties(HttpSession session, HttpServletRequest request) {
+        Iterable<Faculty> faculties = facultyRepository.findAll();
+        request.setAttribute("faculties", faculties);
+        String role = (String) session.getAttribute("userRole");
+        if (role == null || Role.isUser(role)) {
+            return Path.FORWARD_FACULTY_VIEW_ALL_USER;
+        }
+        if (Role.isAdmin(role)) {
+            return Path.FORWARD_FACULTY_VIEW_ALL_ADMIN;
+        }
+        return Path.WELCOME_PAGE;
+    }
+
     @Transactional
     public String addFaculty(String nameEn, String nameRu,
                              String budgetPlaces, String totalPlaces,
@@ -63,6 +76,18 @@ public class FacultyService {
             log.trace("FacultySubjects record created in database: {}", newFS);
         }
         return Path.REDIRECT_TO_FACULTY + nameEn;
+    }
+
+    public String deleteFaculty(Long id) {
+        Faculty facultyToDelete = facultyRepository.findById(id).orElse(null);
+        Iterable<Applicant> facultyApplicants = applicantRepository.findAllByFacultyId(id);
+        if (facultyApplicants != null) {
+//            setErrorMessage(request, ERROR_FACULTY_DEPENDS);
+            return Path.REDIRECT_TO_FACULTY + facultyToDelete.getNameEn();
+        }
+        facultyRepository.delete(facultyToDelete);
+        log.trace("Delete faculty record in database: {}", facultyToDelete);
+        return Path.REDIRECT_TO_VIEW_ALL_FACULTIES;
     }
 
     @Transactional
@@ -155,7 +180,7 @@ public class FacultyService {
         return Path.FORWARD_FACULTY_VIEW_ADMIN;
     }
 
-    public String applyFacultyGet(String nameEn, ModelMap map) {
+    public String applyFacultyGetInfo(String nameEn, ModelMap map) {
         Faculty faculty = facultyRepository.findByNameEn(nameEn);
         map.put("faculty", faculty);
         Iterable<Subject> facultySubjects = subjectRepository.findAllByFacultyId(faculty.getId());
@@ -166,9 +191,9 @@ public class FacultyService {
     }
 
     @Transactional
-    public String applyFacultyPost(HttpSession session,
-                                   @RequestParam(name = "id") Long facultyId,
-                                   HttpServletRequest request) {
+    public String applyFaculty(HttpSession session,
+                               @RequestParam(name = "id") Long facultyId,
+                               HttpServletRequest request) {
         log.trace("Start processing applying for faculty form");
         String email = String.valueOf(session.getAttribute("user"));
         User user = userRepository.findByEmail(email);
@@ -205,7 +230,6 @@ public class FacultyService {
         }
         facultyApplicantsRepository.save(newFacultyApplicant);
         log.trace("FacultyApplicants record was created in database: {}", newFacultyApplicant);
-        log.trace("Finished processing applying for faculty form");
         Faculty faculty = facultyRepository.findById(facultyId).orElse(null);
         return Path.REDIRECT_TO_FACULTY + faculty.getNameEn();
     }
