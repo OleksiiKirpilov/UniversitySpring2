@@ -36,9 +36,7 @@
 				key="profile.view_jsp.button.edit" /></a> <br> <br>
 
 		<form action="logout" method="POST">
-			<input type="hidden" name="command" value="logout"> <input
-				type="submit"
-				value="<fmt:message key="profile.view_jsp.button.logout" />">
+			<input type="submit" value="<fmt:message key="profile.view_jsp.button.logout" />">
 		</form>
 	</div>
 

@@ -90,8 +90,9 @@ public class FacultyService {
 
     public String deleteFaculty(Long id, HttpSession session) {
         Faculty facultyToDelete = facultyRepository.findById(id).orElse(null);
-        Iterable<Applicant> facultyApplicants = applicantRepository.findAllByFacultyId(id);
-        if (facultyApplicants != null) {
+        List<Applicant> facultyApplicants = new ArrayList<>();
+        applicantRepository.findAllByFacultyId(id).forEach(facultyApplicants::add);
+        if (!facultyApplicants.isEmpty()) {
             setErrorMessage(session, ERROR_FACULTY_DEPENDS);
             return Path.REDIRECT_TO_FACULTY + facultyToDelete.getNameEn();
         }

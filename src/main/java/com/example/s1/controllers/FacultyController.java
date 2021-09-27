@@ -13,12 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.swing.text.html.HTML;
 
 import static com.example.s1.utils.MessageHelper.ERROR_FILL_ALL_FIELDS;
 import static com.example.s1.utils.MessageHelper.setErrorMessage;
@@ -65,7 +63,7 @@ public class FacultyController {
 
 
     @GetMapping("/addFaculty")
-    public String preAdd(HttpServletRequest request) {
+    public String addFacultyPage(HttpServletRequest request) {
         Iterable<Subject> allSubjects = subjectRepository.findAll();
         request.setAttribute("allSubjects", allSubjects);
         return Path.FORWARD_FACULTY_ADD_ADMIN;
@@ -86,7 +84,7 @@ public class FacultyController {
     }
 
     @GetMapping("/editFaculty")
-    public String editFaculty(@RequestParam(name = "name_en") String nameEn,
+    public String editFacultyPage(@RequestParam(name = "name_en") String nameEn,
                               ModelMap map) {
         Faculty faculty = facultyRepository.findByNameEn(nameEn);
         map.put("faculty", faculty);
@@ -98,14 +96,14 @@ public class FacultyController {
     }
 
     @PostMapping("/editFaculty")
-    public String editFacultyPost(@RequestParam(name = "name_en") String nameEn,
-                                  @RequestParam(name = "name_ru") String nameRu,
-                                  @RequestParam(name = "total_places") String facultyTotalPlaces,
-                                  @RequestParam(name = "budget_places") String facultyBudgetPlaces,
-                                  @RequestParam(name = "oldName") String oldFacultyName,
-                                  @RequestParam(name = "oldCheckedSubjects") String[] oldCheckedSubjectsIds,
-                                  @RequestParam(name = "subjects") String[] newCheckedSubjectsIds,
-                                  HttpServletRequest request) {
+    public String editFaculty(@RequestParam(name = "name_en") String nameEn,
+                              @RequestParam(name = "name_ru") String nameRu,
+                              @RequestParam(name = "total_places") String facultyTotalPlaces,
+                              @RequestParam(name = "budget_places") String facultyBudgetPlaces,
+                              @RequestParam(name = "oldName") String oldFacultyName,
+                              @RequestParam(name = "oldCheckedSubjects") String[] oldCheckedSubjectsIds,
+                              @RequestParam(name = "subjects") String[] newCheckedSubjectsIds,
+                              HttpServletRequest request) {
         // if user changes faculty name we need to know the old one
         // to update record in db
         boolean valid = InputValidator.validateFacultyParameters(nameRu,

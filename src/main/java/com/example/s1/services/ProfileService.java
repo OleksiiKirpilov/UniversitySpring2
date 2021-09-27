@@ -111,16 +111,20 @@ public class ProfileService {
             return Path.REDIRECT_EDIT_PROFILE;
         }
         User user = userRepository.findByEmail(oldEmail);
+        User exisingUser = userRepository.findByEmail(email);
+        if (exisingUser != null && !user.getId().equals(exisingUser.getId())) {
+            setErrorMessage(session, ERROR_EMAIL_USED);
+            log.error("This email is already in use.");
+            return Path.REDIRECT_EDIT_PROFILE;
+        }
         if (Role.isAdmin(role)) {
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setEmail(email);
             user.setPassword(password);
             user.setLang(lang);
-            log.trace("After calling setters with request parameters on user entity: {}", user);
             userRepository.save(user);
-            log.trace("User info updated");
-            // update session attributes if user changed it
+            log.trace("User info updated. {}", user);
             session.setAttribute("user", email);
             session.setAttribute(USER_LANG, lang);
             return Path.REDIRECT_TO_PROFILE;
@@ -142,15 +146,12 @@ public class ProfileService {
             log.trace("After calling setters with request parameters on user entity: {}", user);
             userRepository.save(user);
             log.trace("User info updated");
-            Applicant a = applicantRepository.findByUserId(user.getId());
-            a.setCity(city);
-            a.setDistrict(district);
-            a.setSchool(school);
-//            a.setBlocked(isBlocked);
-            log.trace("After calling setters with request parameters on applicant entity: {}", a);
-            applicantRepository.save(a);
-            log.trace("Applicant info updated");
-            // update session attributes if user changed it
+            Applicant ap = applicantRepository.findByUserId(user.getId());
+            ap.setCity(city);
+            ap.setDistrict(district);
+            ap.setSchool(school);
+            applicantRepository.save(ap);
+            log.trace("Applicant info updated. {}", ap);
             session.setAttribute("user", email);
             session.setAttribute(USER_LANG, lang);
             return Path.REDIRECT_TO_PROFILE;

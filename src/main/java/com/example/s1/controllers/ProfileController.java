@@ -96,16 +96,16 @@ public class ProfileController {
     }
 
     @GetMapping("/adminRegistration")
-    public String addAdmin() {
+    public String addAdminPage() {
         return Path.FORWARD_ADMIN_REGISTRATION_PAGE;
     }
 
     @PostMapping("/adminRegistration")
-    public String addAdminPost(@RequestParam String email, @RequestParam String password,
-                               @RequestParam(name = "first_name") String firstName,
-                               @RequestParam(name = "last_name") String lastName,
-                               @RequestParam String lang,
-                               HttpSession session
+    public String addAdmin(@RequestParam String email, @RequestParam String password,
+                           @RequestParam(name = "first_name") String firstName,
+                           @RequestParam(name = "last_name") String lastName,
+                           @RequestParam String lang,
+                           HttpSession session
     ) {
         boolean valid = InputValidator.validateUserParameters(firstName, lastName, email, password, lang);
         if (!valid) {
@@ -113,7 +113,13 @@ public class ProfileController {
             log.error("errorMessage: Not all fields are filled");
             return Path.REDIRECT_ADMIN_REGISTRATION_PAGE;
         }
-        User user = new User(email, password, firstName, lastName, Role.ADMIN.toString(), lang);
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            setErrorMessage(session, ERROR_EMAIL_USED);
+            log.error("This email({}) is already in use.", email);
+            return Path.REDIRECT_ADMIN_REGISTRATION_PAGE;
+        }
+        user = new User(email, password, firstName, lastName, Role.ADMIN.toString(), lang);
         userRepository.save(user);
         log.trace("User record created: {}", user);
         setOkMessage(session, MESSAGE_ACCOUNT_CREATED);

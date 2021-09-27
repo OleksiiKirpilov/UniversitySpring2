@@ -18,13 +18,13 @@ public class ApplicantController {
     ApplicantService applicantService;
 
     @GetMapping("/viewApplicant")
-    public String viewApplicant(@RequestParam Long userId,
+    public String viewApplicantPage(@RequestParam Long userId,
                                 ModelMap map) {
         return applicantService.viewApplicant(userId, map);
     }
 
     @PostMapping("/viewApplicant")
-    public String viewApplicantPost(@RequestParam Long id) {
+    public String viewApplicant(@RequestParam Long id) {
         return applicantService.updateApplicantStatus(id);
     }
 
