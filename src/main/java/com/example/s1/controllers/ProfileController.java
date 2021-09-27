@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
+/**
+ * Profile related controller
+ */
 @Slf4j
 @Controller
 public class ProfileController {

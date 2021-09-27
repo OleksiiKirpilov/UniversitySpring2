@@ -51,6 +51,7 @@ public final class Path {
 	public static final String REDIRECT_APPLICANT_PROFILE = "redirect:/viewApplicant?userId=";
 
 	public static final String FORWARD_REPORT_SHEET_VIEW = "/admin/admin_view_report";
+	public static final String REDIRECT_REPORT_SHEET_VIEW = "redirect:/createReport?id=";
 
 	private Path() {
 	}

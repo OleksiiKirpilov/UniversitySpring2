@@ -4,7 +4,9 @@ import com.example.s1.utils.Path;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-
+/**
+ * Welcome page controller
+ */
 @Controller
 public class WelcomeController {
 

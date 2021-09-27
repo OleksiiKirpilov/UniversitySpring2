@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Subject related controller
+ */
 @Slf4j
 @Controller
 public class SubjectController {

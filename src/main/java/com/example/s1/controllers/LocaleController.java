@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 
+/**
+ * Language switching controller
+ */
 @Slf4j
 @Controller
 public class LocaleController {

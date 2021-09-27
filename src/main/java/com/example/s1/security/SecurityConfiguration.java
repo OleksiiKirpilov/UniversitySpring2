@@ -49,7 +49,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/editFaculty",
                         "/addFaculty",
                         "/editSubject",
-                        "/viewApplicant"
+                        "/viewApplicant",
+                        "/createReport",
+                        "/finalizeReport"
                             ).hasRole(Role.ADMIN_ROLE_NAME)
                 .antMatchers(
                         "/editProfile",

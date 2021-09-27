@@ -1,8 +1,8 @@
 package com.example.s1.controllers;
 
-import com.example.s1.model.*;
+import com.example.s1.model.Faculty;
+import com.example.s1.model.Subject;
 import com.example.s1.repository.*;
-import com.example.s1.services.ApplicantService;
 import com.example.s1.services.FacultyService;
 import com.example.s1.services.ReportService;
 import com.example.s1.utils.InputValidator;
@@ -13,11 +13,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+/**
+ * Faculty related controller
+ */
 @Slf4j
 @Controller
 public class FacultyController {
@@ -119,15 +123,19 @@ public class FacultyController {
 
     @PostMapping("/applyFaculty")
     public String applyFacultyPost(HttpSession session,
-                                   @RequestParam(name = "id") Long facultyId,
+                                   @RequestParam Long id,
                                    HttpServletRequest request) {
-        return facultyService.applyFaculty(session, facultyId, request);
+        return facultyService.applyFaculty(session, id, request);
     }
 
     @GetMapping("/createReport")
-    public String createReport(@RequestParam Long id,
-                               ModelMap map) {
-        return reportService.createReport(id, map);
+    public String createReport(@RequestParam Long id, ModelMap map) {
+        return reportService.createReport(id, map, false);
+    }
+
+    @PostMapping("/finalizeReport")
+    public String finalizeReport(@RequestParam Long id, ModelMap map) {
+        return reportService.createReport(id, map, true);
     }
 
 }

@@ -2,7 +2,6 @@ package com.example.s1.services;
 
 import com.example.s1.model.*;
 import com.example.s1.repository.*;
-import com.example.s1.utils.Fields;
 import com.example.s1.utils.InputValidator;
 import com.example.s1.utils.Path;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+
 
 @Slf4j
 @Service
@@ -192,7 +192,7 @@ public class FacultyService {
 
     @Transactional
     public String applyFaculty(HttpSession session,
-                               @RequestParam(name = "id") Long facultyId,
+                               Long facultyId,
                                HttpServletRequest request) {
         log.trace("Start processing applying for faculty form");
         String email = String.valueOf(session.getAttribute("user"));

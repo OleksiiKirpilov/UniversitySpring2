@@ -45,4 +45,17 @@ public class ReportSheet implements Serializable {
 
     @Column
     private boolean enteredOnBudget;
+
+    public ReportSheet(ReportSheetView rs) {
+        facultyId = rs.getFacultyId();
+        firstName = rs.getFirstName();
+        lastName = rs.getLastName();
+        email = rs.getEmail();
+        blocked = rs.isBlocked();
+        preliminarySum = rs.getPreliminarySum();
+        diplomaSum = rs.getDiplomaSum();
+        totalSum = rs.getTotalSum();
+        entered = rs.isEntered();
+        enteredOnBudget = rs.isEnteredOnBudget();
+    }
 }
