@@ -1,5 +1,6 @@
 package com.example.s1.controllers;
 
+import com.example.s1.model.Lang;
 import com.example.s1.utils.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -18,16 +19,15 @@ import javax.servlet.jsp.jstl.core.Config;
 public class LocaleController {
 
     @GetMapping("/setSessionLanguage")
-    public String setSessionLanguage(@RequestParam(name = "lang", defaultValue = "en") String lang,
+    public String setSessionLanguage(@RequestParam(name = "lang", defaultValue = Lang.LANG_EN_NAME) String lang,
                                      HttpSession session, HttpServletRequest request) {
         session.setAttribute("lang", lang);
         String referer = request.getHeader("Referer");
         if (referer == null) {
-            referer = "welcome";
+            referer = Path.WELCOME_PAGE;
         }
         Config.set(session, Config.FMT_LOCALE, new java.util.Locale(lang));
         return "redirect:" + referer;
-//        return Path.WELCOME_PAGE;
     }
 
 }

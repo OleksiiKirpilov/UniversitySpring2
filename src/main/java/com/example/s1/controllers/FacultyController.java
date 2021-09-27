@@ -85,7 +85,7 @@ public class FacultyController {
 
     @GetMapping("/editFaculty")
     public String editFacultyPage(@RequestParam(name = "name_en") String nameEn,
-                              ModelMap map) {
+                                  ModelMap map) {
         Faculty faculty = facultyRepository.findByNameEn(nameEn);
         map.put("faculty", faculty);
         Iterable<Subject> otherSubjects = subjectRepository.findAllByFacultyIdNotEquals(faculty.getId());

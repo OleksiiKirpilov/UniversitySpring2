@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * Subject entity. Every subject is characterized by its name.
+ * Subject entity. Has its name in two languages.
  */
 @Entity
 @Data

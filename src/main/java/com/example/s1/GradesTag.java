@@ -1,5 +1,9 @@
 package com.example.s1;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
@@ -11,8 +15,10 @@ import java.util.List;
  * Custom tag class which needed in apply for faculty user form. The main
  * purpose of this class is remove the need of validation in ApplyFacultyView
  * command.
- * The maximum mark in subject is equal to 12, the lower one is zero.
+ * The maximum grade in subject is equal to 12, the lower one is zero.
  */
+@Getter
+@Setter
 public class GradesTag extends SimpleTagSupport {
 
     private static final List<Integer> grades = new ArrayList<>();
@@ -24,22 +30,6 @@ public class GradesTag extends SimpleTagSupport {
         for (int i = 0; i <= 12; i++) {
             grades.add(i);
         }
-    }
-
-    public int getSubjectId() {
-        return subjectId;
-    }
-
-    public void setSubjectId(int subjectId) {
-        this.subjectId = subjectId;
-    }
-
-    public String getExamType() {
-        return examType;
-    }
-
-    public void setExamType(String examType) {
-        this.examType = examType;
     }
 
     @Override

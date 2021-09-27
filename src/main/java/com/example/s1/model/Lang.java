@@ -1,5 +1,8 @@
 package com.example.s1.model;
 
+/**
+ * Language code enum
+ */
 public enum Lang {
         EN, RU;
 

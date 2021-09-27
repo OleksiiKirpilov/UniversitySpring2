@@ -2,6 +2,7 @@ package com.example.s1;
 
 import com.example.s1.controllers.ProfileController;
 import com.example.s1.model.Applicant;
+import com.example.s1.model.Lang;
 import com.example.s1.model.User;
 import com.example.s1.repository.ApplicantRepository;
 import com.example.s1.repository.UserRepository;
@@ -99,7 +100,7 @@ class ProfileControllerTest {
         String password = "testpassword";
         String firstName = "firstname";
         String lastName = "lastname";
-        String lang = "en";
+        String lang = Lang.LANG_EN_NAME;
         String city = "city";
         String district = "district";
         String school = "school";
@@ -119,7 +120,7 @@ class ProfileControllerTest {
         String password = "testpassword";
         String firstName = "firstname";
         String lastName = "lastname";
-        String lang = "en";
+        String lang = Lang.LANG_EN_NAME;
         String result = profileController.addAdmin(email, password, firstName,
                 lastName, lang, session);
         User user = userRepository.findByEmail(email);

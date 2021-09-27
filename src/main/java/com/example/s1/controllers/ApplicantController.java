@@ -19,7 +19,7 @@ public class ApplicantController {
 
     @GetMapping("/viewApplicant")
     public String viewApplicantPage(@RequestParam Long userId,
-                                ModelMap map) {
+                                    ModelMap map) {
         return applicantService.viewApplicant(userId, map);
     }
 

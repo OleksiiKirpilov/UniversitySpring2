@@ -8,9 +8,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * User entity. This transfer object characterized by id, first and last names,
- * email, password, role in system, site language and active status. Email
- * should be unique. Every field must be filled.
+ * User entity. Has id, first and last names, email, password,
+ * role and preferred language. Email should be unique.
  */
 @Entity
 @Data
@@ -40,8 +39,6 @@ public class User implements Serializable {
 
     @Column(nullable = false)
     private String lang;
-
-//    private Boolean enabled;
 
 
     public User(String email, String password, String firstName, String lastName, String role, String lang) {

@@ -50,16 +50,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/viewApplicant",
                         "/createReport",
                         "/finalizeReport"
-                            ).hasRole(Role.ADMIN_ROLE_NAME)
+                ).hasRole(Role.ADMIN_ROLE_NAME)
                 .antMatchers(
                         "/editProfile",
                         "/viewProfile"
-                            ).hasAnyRole(Role.ADMIN_ROLE_NAME, Role.USER_ROLE_NAME)
+                ).hasAnyRole(Role.ADMIN_ROLE_NAME, Role.USER_ROLE_NAME)
                 .antMatchers("/").permitAll()
-//                .and().formLogin().loginPage("/").permitAll()
-//                .usernameParameter("email").passwordParameter("password")
-//                .loginProcessingUrl("/l")
-//                .successForwardUrl("/")
         ;
     }
 

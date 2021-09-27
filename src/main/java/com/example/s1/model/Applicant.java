@@ -7,9 +7,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * Applicant entity. This transfer object characterized by city, district,
- * school, foreign user id field and blocked state, which is false by default,
- * but may be changed by admin.
+ * Applicant entity. Has city, district, school, foreign user id field
+ * and blocked state, which may be changed by admin.
  */
 @Entity
 @Data
