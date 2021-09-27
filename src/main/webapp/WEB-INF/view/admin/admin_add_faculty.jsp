@@ -54,6 +54,8 @@
 		</a>
 	</div>
 
+	
+
 	<%@ include file="/WEB-INF/view/jspf/message.jspf" %>
 
 	<script src="script/faculty-validation.js"></script>

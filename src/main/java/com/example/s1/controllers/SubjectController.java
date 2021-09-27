@@ -58,8 +58,9 @@ public class SubjectController {
 
     @PostMapping("/addSubject")
     public String addSubject(@RequestParam(name = "name_ru") String nameRu,
-                             @RequestParam(name = "name_en") String nameEn) {
-        return subjectService.add(nameRu, nameEn);
+                             @RequestParam(name = "name_en") String nameEn,
+                             HttpServletRequest request) {
+        return subjectService.add(nameRu, nameEn, request);
     }
 
     @PostMapping("/deleteSubject")
@@ -78,7 +79,8 @@ public class SubjectController {
     @PostMapping("/editSubject")
     public String edit(@RequestParam String oldName,
                        @RequestParam(name = "name_en") String nameEn,
-                       @RequestParam(name = "name_ru") String nameRu) {
-        return subjectService.edit(oldName, nameEn, nameRu);
+                       @RequestParam(name = "name_ru") String nameRu,
+                       HttpServletRequest request) {
+        return subjectService.edit(oldName, nameEn, nameRu, request);
     }
 }

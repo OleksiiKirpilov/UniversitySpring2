@@ -24,6 +24,9 @@ import javax.servlet.jsp.jstl.core.Config;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.s1.utils.Fields.USER_LANG;
+import static com.example.s1.utils.MessageHelper.*;
+
 @Slf4j
 @Service
 public class ProfileService {
@@ -37,8 +40,8 @@ public class ProfileService {
     public String login(String email, String password, HttpSession session) {
         User user = userRepository.findUserByEmailAndPassword(email, password);
         if (user == null) {
-//            setErrorMessage(request, ERROR_CAN_NOT_FIND_USER);
-            log.error("errorMessage: Cannot find user with such login/password");
+            setErrorMessage(session, ERROR_CAN_NOT_FIND_USER);
+            log.debug("errorMessage: Cannot find user with such login/password");
             return Path.WELCOME_PAGE;
         }
         List<SimpleGrantedAuthority> roles = new ArrayList<>();
@@ -50,7 +53,7 @@ public class ProfileService {
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, sc);
         session.setAttribute("user", user.getEmail());
         session.setAttribute("userRole", user.getRole());
-        session.setAttribute("lang", user.getLang());
+        session.setAttribute(USER_LANG, user.getLang());
         Config.set(session, Config.FMT_LOCALE, new java.util.Locale(user.getLang()));
         return Path.REDIRECT_TO_VIEW_ALL_FACULTIES;
     }
@@ -80,7 +83,7 @@ public class ProfileService {
         map.put(Fields.USER_LAST_NAME, user.getLastName());
         map.put(Fields.USER_EMAIL, user.getEmail());
         map.put(Fields.USER_PASSWORD, user.getPassword());
-        map.put(Fields.USER_LANG, user.getLang());
+        map.put(USER_LANG, user.getLang());
         if (Role.isAdmin(role)) {
             return Path.FORWARD_ADMIN_PROFILE_EDIT;
         }
@@ -103,7 +106,7 @@ public class ProfileService {
                 firstName, lastName, email, password, lang);
         String role = String.valueOf(session.getAttribute("userRole"));
         if (!valid) {
-//            setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
+            setErrorMessage(session, ERROR_FILL_ALL_FIELDS);
             log.error("errorMessage: Not all fields are properly filled");
             return Path.REDIRECT_EDIT_PROFILE;
         }
@@ -119,7 +122,7 @@ public class ProfileService {
             log.trace("User info updated");
             // update session attributes if user changed it
             session.setAttribute("user", email);
-            session.setAttribute(Fields.USER_LANG, lang);
+            session.setAttribute(USER_LANG, lang);
             return Path.REDIRECT_TO_PROFILE;
         }
         if (Role.isUser(role)) {
@@ -127,7 +130,7 @@ public class ProfileService {
             // record for them
             valid = InputValidator.validateApplicantParameters(city, district, school);
             if (!valid) {
-//                setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
+                setErrorMessage(session, ERROR_FILL_ALL_FIELDS);
                 log.error("errorMessage: Not all fields are properly filled");
                 return Path.REDIRECT_EDIT_PROFILE;
             }
@@ -149,7 +152,7 @@ public class ProfileService {
             log.trace("Applicant info updated");
             // update session attributes if user changed it
             session.setAttribute("user", email);
-            session.setAttribute(Fields.USER_LANG, lang);
+            session.setAttribute(USER_LANG, lang);
             return Path.REDIRECT_TO_PROFILE;
         }
         return Path.WELCOME_PAGE;

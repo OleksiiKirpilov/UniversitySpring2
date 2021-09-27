@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
+import static com.example.s1.utils.MessageHelper.*;
+
 /**
  * Profile related controller
  */
@@ -74,12 +76,13 @@ public class ProfileController {
         boolean valid = InputValidator.validateUserParameters(firstName, lastName, email, password, lang);
         valid &= InputValidator.validateApplicantParameters(city, district, school);
         if (!valid) {
-//            setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
+            setErrorMessage(session, ERROR_FILL_ALL_FIELDS);
             log.error("Not all fields are filled");
             return Path.REDIRECT_USER_REGISTRATION_PAGE;
         }
         User user = userRepository.findByEmail(email);
         if (user != null) {
+            setErrorMessage(session, ERROR_EMAIL_USED);
             log.error("This email is already in use.");
             return Path.REDIRECT_USER_REGISTRATION_PAGE;
         }
@@ -101,18 +104,19 @@ public class ProfileController {
     public String addAdminPost(@RequestParam String email, @RequestParam String password,
                                @RequestParam(name = "first_name") String firstName,
                                @RequestParam(name = "last_name") String lastName,
-                               @RequestParam String lang
+                               @RequestParam String lang,
+                               HttpSession session
     ) {
         boolean valid = InputValidator.validateUserParameters(firstName, lastName, email, password, lang);
         if (!valid) {
-//            setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
+            setErrorMessage(session, ERROR_FILL_ALL_FIELDS);
             log.error("errorMessage: Not all fields are filled");
             return Path.REDIRECT_ADMIN_REGISTRATION_PAGE;
         }
         User user = new User(email, password, firstName, lastName, Role.ADMIN.toString(), lang);
         userRepository.save(user);
         log.trace("User record created: {}", user);
-//        setOkMessage(request, MESSAGE_ACCOUNT_CREATED);
+        setOkMessage(session, MESSAGE_ACCOUNT_CREATED);
         return Path.REDIRECT_TO_PROFILE;
     }
 

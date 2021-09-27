@@ -2,6 +2,7 @@ package com.example.s1.services;
 
 import com.example.s1.model.*;
 import com.example.s1.repository.*;
+import com.example.s1.utils.Fields;
 import com.example.s1.utils.InputValidator;
 import com.example.s1.utils.Path;
 import lombok.extern.slf4j.Slf4j;
@@ -9,11 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+
+import static com.example.s1.utils.MessageHelper.*;
 
 
 @Slf4j
@@ -34,6 +36,8 @@ public class FacultyService {
     FacultyApplicantsRepository facultyApplicantsRepository;
     @Autowired
     GradeRepository gradeRepository;
+    @Autowired
+    ReportSheetRepository reportSheetRepository;
 
 
     public String viewAllFaculties(HttpSession session, HttpServletRequest request) {
@@ -52,16 +56,22 @@ public class FacultyService {
     @Transactional
     public String addFaculty(String nameEn, String nameRu,
                              String budgetPlaces, String totalPlaces,
-                             Long[] subjects) {
+                             Long[] subjects, HttpServletRequest request) {
         boolean valid = InputValidator.validateFacultyParameters(nameRu,
                 nameEn, budgetPlaces, totalPlaces);
         if (!valid) {
-            //setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
+            setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
             log.error("errorMessage: Not all fields are properly filled");
             return Path.REDIRECT_FACULTY_ADD_ADMIN;
         }
         int total = Integer.parseInt(totalPlaces);
         int budget = Integer.parseInt(budgetPlaces);
+        if (facultyRepository.findByNameEn(nameEn) != null
+                || facultyRepository.findByNameRu(nameRu) != null) {
+            setErrorMessage(request, ERROR_FACULTY_EXISTS);
+            log.error("Can not create faculty with names {}, {}", nameEn, nameRu);
+            return Path.REDIRECT_FACULTY_ADD_ADMIN;
+        }
         Faculty faculty = new Faculty(nameRu, nameEn, budget, total);
         facultyRepository.save(faculty);
         log.trace("Create faculty record in database: {}", faculty);
@@ -78,11 +88,11 @@ public class FacultyService {
         return Path.REDIRECT_TO_FACULTY + nameEn;
     }
 
-    public String deleteFaculty(Long id) {
+    public String deleteFaculty(Long id, HttpSession session) {
         Faculty facultyToDelete = facultyRepository.findById(id).orElse(null);
         Iterable<Applicant> facultyApplicants = applicantRepository.findAllByFacultyId(id);
         if (facultyApplicants != null) {
-//            setErrorMessage(request, ERROR_FACULTY_DEPENDS);
+            setErrorMessage(session, ERROR_FACULTY_DEPENDS);
             return Path.REDIRECT_TO_FACULTY + facultyToDelete.getNameEn();
         }
         facultyRepository.delete(facultyToDelete);
@@ -159,11 +169,17 @@ public class FacultyService {
         Iterable<Subject> facultySubjects = subjectRepository.findAllByFacultyId(facultyRecord.getId());
         map.put("facultySubjects", facultySubjects);
 
+        List<ReportSheet> report = reportSheetRepository.getAllByFacultyIdEquals(facultyRecord.getId());
+        boolean finalized = !report.isEmpty();
+        map.put(Fields.REPORT_SHEET_FACULTY_FINALIZED, finalized);
+
         String role = (String) session.getAttribute("userRole");
         String userEmail = (String) session.getAttribute("user");
         if (Role.isUser(role)) {
             boolean applied = hasUserAppliedFacultyByEmail(facultyRecord, userEmail);
-            map.put("alreadyApplied", applied ? "yes" : "no");
+            map.put("alreadyApplied", applied);
+            boolean enrolled = isApplicantEnrolled(userEmail, report);
+            map.put("enrolled", enrolled);
             return Path.FORWARD_FACULTY_VIEW_USER;
         }
         if (!Role.isAdmin(role)) {
@@ -173,7 +189,9 @@ public class FacultyService {
         Map<Applicant, String> facultyApplicants = new TreeMap<>(Comparator.comparingLong(Applicant::getId));
         for (Applicant applicant : applicants) {
             User user = userRepository.findById(applicant.getUserId()).orElse(null);
-            if (user == null) continue;
+            if (user == null) {
+                continue;
+            }
             facultyApplicants.put(applicant, user.getFirstName() + " " + user.getLastName());
         }
         map.put("facultyApplicants", facultyApplicants);
@@ -241,4 +259,11 @@ public class FacultyService {
                 facultyApplicantsRepository.findByFacultyIdAndApplicantId(faculty.getId(), a.getId());
         return fa != null;
     }
+
+    private boolean isApplicantEnrolled(String email, List<ReportSheet> report) {
+        return report.stream()
+                .filter(r -> r.getEmail().equals(email))
+                .anyMatch(ReportSheet::isEntered);
+    }
+
 }
