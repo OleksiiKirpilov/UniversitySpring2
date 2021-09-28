@@ -23,17 +23,12 @@ public class ApplicantService {
     ApplicantRepository applicantRepository;
 
     @Transactional
-    public String saveApplicant(HttpSession session, User user, String city, String district, String school) {
+    public void saveApplicant(HttpSession session, User user, String city, String district, String school) {
         userRepository.save(user);
         log.trace("User record created: {}", user);
         Applicant applicant = new Applicant(city, district, school, user.getId(), false);
         applicantRepository.save(applicant);
         log.trace("Applicant record created: {}", applicant);
-        session.setAttribute("user", user.getEmail());
-        session.setAttribute("userRole", user.getRole());
-        session.setAttribute("lang", user.getLang());
-        log.info("User: {} logged as {}", user, user.getRole());
-        return Path.REDIRECT_TO_PROFILE;
     }
 
     public String updateApplicantStatus(Long id) {

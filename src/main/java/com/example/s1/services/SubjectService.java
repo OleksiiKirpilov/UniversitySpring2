@@ -37,7 +37,7 @@ public class SubjectService {
         boolean valid = InputValidator.validateSubjectParameters(nameRu, nameEn);
         if (!valid) {
             setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
-            log.error("errorMessage: Not all fields are properly filled");
+            log.debug("errorMessage: Not all fields are properly filled");
             return Path.REDIRECT_SUBJECT_ADD_ADMIN;
         }
         Subject subject = new Subject();
@@ -53,7 +53,7 @@ public class SubjectService {
         boolean valid = InputValidator.validateSubjectParameters(nameRu, nameEn);
         if (!valid) {
             setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
-            log.error("errorMessage: Not all fields are properly filled");
+            log.debug("errorMessage: Not all fields are properly filled");
             return Path.REDIRECT_SUBJECT_EDIT_ADMIN + oldName;
         }
         subject.setNameRu(nameRu);

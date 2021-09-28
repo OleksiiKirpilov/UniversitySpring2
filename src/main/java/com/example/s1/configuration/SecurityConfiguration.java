@@ -35,27 +35,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/user/user_view_faculty").permitAll()
-                .antMatchers("/user/user_add_user").permitAll()
-                .antMatchers("/admin/**").hasRole(Role.ADMIN_ROLE_NAME)
-                .antMatchers("/user/**",
-                        "/applyFaculty").hasRole(Role.USER_ROLE_NAME)
+                .antMatchers("/userRegistration").anonymous()
+                .antMatchers("/applyFaculty").hasRole(Role.USER_ROLE_NAME)
                 .antMatchers(
                         "/adminRegistration",
                         "/viewAllSubjects",
                         "/viewSubject",
-                        "/editFaculty",
-                        "/addFaculty",
+                        "/addSubject",
                         "/editSubject",
+                        "/deleteSubject",
+                        "/addFaculty",
+                        "/editFaculty",
+                        "/deleteFaculty",
                         "/viewApplicant",
-                        "/createReport",
-                        "/finalizeReport"
+                        "/createReport"
                 ).hasRole(Role.ADMIN_ROLE_NAME)
-                .antMatchers(
+                .antMatchers("/viewProfile",
                         "/editProfile",
-                        "/viewProfile"
+                        "/logout"
                 ).hasAnyRole(Role.ADMIN_ROLE_NAME, Role.USER_ROLE_NAME)
-                .antMatchers("/").permitAll()
+                .antMatchers("/login",
+                        "/viewAllFaculties",
+                        "/viewFaculty",
+                        "/setSessionLanguage").permitAll()
         ;
     }
 

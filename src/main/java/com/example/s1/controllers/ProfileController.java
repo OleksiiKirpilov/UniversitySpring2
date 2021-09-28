@@ -70,24 +70,24 @@ public class ProfileController {
                           @RequestParam String lang,
                           @RequestParam String city, @RequestParam String district,
                           @RequestParam String school,
-                          HttpSession session
-
-    ) {
+                          HttpSession session) {
         boolean valid = InputValidator.validateUserParameters(firstName, lastName, email, password, lang);
         valid &= InputValidator.validateApplicantParameters(city, district, school);
         if (!valid) {
             setErrorMessage(session, ERROR_FILL_ALL_FIELDS);
-            log.error("Not all fields are filled");
+            log.debug("Not all fields are filled");
             return Path.REDIRECT_USER_REGISTRATION_PAGE;
         }
         User user = userRepository.findByEmail(email);
         if (user != null) {
             setErrorMessage(session, ERROR_EMAIL_USED);
-            log.error("This email is already in use.");
+            log.debug("This email is already in use.");
             return Path.REDIRECT_USER_REGISTRATION_PAGE;
         }
-        user = new User(email, password, firstName, lastName, Role.USER.toString(), lang);
-        return applicantService.saveApplicant(session, user, city, district, school);
+        user = new User(email, password, firstName, lastName, Role.USER_ROLE_NAME, lang);
+        applicantService.saveApplicant(session, user, city, district, school);
+        profileService.setUserAuthorities(user, session);
+        return Path.REDIRECT_TO_PROFILE;
     }
 
     @GetMapping("/viewProfile")
@@ -110,13 +110,13 @@ public class ProfileController {
         boolean valid = InputValidator.validateUserParameters(firstName, lastName, email, password, lang);
         if (!valid) {
             setErrorMessage(session, ERROR_FILL_ALL_FIELDS);
-            log.error("errorMessage: Not all fields are filled");
+            log.debug("errorMessage: Not all fields are filled");
             return Path.REDIRECT_ADMIN_REGISTRATION_PAGE;
         }
         User user = userRepository.findByEmail(email);
         if (user != null) {
             setErrorMessage(session, ERROR_EMAIL_USED);
-            log.error("This email({}) is already in use.", email);
+            log.debug("This email({}) is already in use.", email);
             return Path.REDIRECT_ADMIN_REGISTRATION_PAGE;
         }
         user = new User(email, password, firstName, lastName, Role.ADMIN.toString(), lang);

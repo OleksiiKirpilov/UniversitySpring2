@@ -78,7 +78,7 @@
 			</div>
 			<div class="field">
 				<fmt:message key="registration.label.already_registered_msg" />
-				<a href="welcome.jsp"><fmt:message key="registration.label.login_here_msg" /></a>
+				<a href="login"><fmt:message key="registration.label.login_here_msg" /></a>
 			</div>
 		</form>
 	</div>

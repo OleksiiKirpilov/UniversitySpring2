@@ -110,10 +110,9 @@ public class FacultyController {
                 nameEn, facultyBudgetPlaces, facultyTotalPlaces);
         if (!valid) {
             setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
-            log.error("errorMessage: Not all fields are properly filled");
+            log.debug("errorMessage: Not all fields are properly filled");
             return Path.REDIRECT_FACULTY_EDIT_ADMIN + oldFacultyName;
         }
-        // if it's true then let's start to update the db
         return facultyService.updateFaculty(oldFacultyName, nameEn, nameRu, facultyTotalPlaces,
                 facultyBudgetPlaces, oldCheckedSubjectsIds, newCheckedSubjectsIds);
     }
@@ -136,7 +135,7 @@ public class FacultyController {
         return reportService.createReport(id, map, false);
     }
 
-    @PostMapping("/finalizeReport")
+    @PostMapping("/createReport")
     public String finalizeReport(@RequestParam Long id, ModelMap map) {
         return reportService.createReport(id, map, true);
     }

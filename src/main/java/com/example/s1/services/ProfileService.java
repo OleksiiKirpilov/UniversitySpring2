@@ -44,17 +44,7 @@ public class ProfileService {
             log.debug("errorMessage: Cannot find user with such login/password");
             return Path.WELCOME_PAGE;
         }
-        List<SimpleGrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
-        UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(email, password, roles);
-        SecurityContext sc = SecurityContextHolder.getContext();
-        sc.setAuthentication(token);
-        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, sc);
-        session.setAttribute("user", user.getEmail());
-        session.setAttribute("userRole", user.getRole());
-        session.setAttribute(USER_LANG, user.getLang());
-        Config.set(session, Config.FMT_LOCALE, new java.util.Locale(user.getLang()));
+        setUserAuthorities(user, session);
         return Path.REDIRECT_TO_VIEW_ALL_FACULTIES;
     }
 
@@ -107,14 +97,14 @@ public class ProfileService {
         String role = String.valueOf(session.getAttribute("userRole"));
         if (!valid) {
             setErrorMessage(session, ERROR_FILL_ALL_FIELDS);
-            log.error("errorMessage: Not all fields are properly filled");
+            log.debug("errorMessage: Not all fields are properly filled");
             return Path.REDIRECT_EDIT_PROFILE;
         }
         User user = userRepository.findByEmail(oldEmail);
         User exisingUser = userRepository.findByEmail(email);
         if (exisingUser != null && !user.getId().equals(exisingUser.getId())) {
             setErrorMessage(session, ERROR_EMAIL_USED);
-            log.error("This email is already in use.");
+            log.debug("This email is already in use.");
             return Path.REDIRECT_EDIT_PROFILE;
         }
         if (Role.isAdmin(role)) {
@@ -135,7 +125,7 @@ public class ProfileService {
             valid = InputValidator.validateApplicantParameters(city, district, school);
             if (!valid) {
                 setErrorMessage(session, ERROR_FILL_ALL_FIELDS);
-                log.error("errorMessage: Not all fields are properly filled");
+                log.debug("errorMessage: Not all fields are properly filled");
                 return Path.REDIRECT_EDIT_PROFILE;
             }
             user.setFirstName(firstName);
@@ -159,5 +149,19 @@ public class ProfileService {
         return Path.WELCOME_PAGE;
     }
 
+    public void setUserAuthorities(User user, HttpSession session) {
+        List<SimpleGrantedAuthority> roles = new ArrayList<>();
+        roles.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+        UsernamePasswordAuthenticationToken token =
+                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword(), roles);
+        SecurityContext sc = SecurityContextHolder.getContext();
+        sc.setAuthentication(token);
+        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, sc);
+        session.setAttribute("user", user.getEmail());
+        session.setAttribute("userRole", user.getRole());
+        session.setAttribute(USER_LANG, user.getLang());
+        Config.set(session, Config.FMT_LOCALE, new java.util.Locale(user.getLang()));
+        log.info("User: {} logged as {}", user, user.getRole());
+    }
 
 }

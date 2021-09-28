@@ -10,7 +10,6 @@ public enum Lang {
             return name().toLowerCase();
         }
 
-
         public static final String LANG_EN_NAME = "en";
         public static final String LANG_RU_NAME = "ru";
 

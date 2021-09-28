@@ -49,5 +49,12 @@ public class User implements Serializable {
         this.role = role;
         this.lang = lang;
     }
+
+    @Override
+    public String toString() {
+        return "User [email=" + email + ", password=***"
+                + ", firstName=" + firstName + ", lastName=" + lastName
+                + ", role=" + role + ", lang=" + lang + "]";
+    }
 }
 

@@ -6,7 +6,7 @@ package com.example.s1.utils;
 public final class Path {
 
 	public static final String WELCOME_PAGE = "welcome";
-	public static final String ERROR_PAGE = "errorPage";
+	public static final String ERROR_PAGE = "error";
 
 	public static final String FORWARD_USER_REGISTRATION_PAGE = "/user/user_add_user";
 	public static final String REDIRECT_USER_REGISTRATION_PAGE = "redirect:/userRegistration";

@@ -61,7 +61,7 @@ public class FacultyService {
                 nameEn, budgetPlaces, totalPlaces);
         if (!valid) {
             setErrorMessage(request, ERROR_FILL_ALL_FIELDS);
-            log.error("errorMessage: Not all fields are properly filled");
+            log.debug("errorMessage: Not all fields are properly filled");
             return Path.REDIRECT_FACULTY_ADD_ADMIN;
         }
         int total = Integer.parseInt(totalPlaces);
@@ -69,7 +69,7 @@ public class FacultyService {
         if (facultyRepository.findByNameEn(nameEn) != null
                 || facultyRepository.findByNameRu(nameRu) != null) {
             setErrorMessage(request, ERROR_FACULTY_EXISTS);
-            log.error("Can not create faculty with names {}, {}", nameEn, nameRu);
+            log.debug("Can not create faculty with names {}, {}", nameEn, nameRu);
             return Path.REDIRECT_FACULTY_ADD_ADMIN;
         }
         Faculty faculty = new Faculty(nameRu, nameEn, budget, total);

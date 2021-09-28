@@ -59,7 +59,7 @@
 
 	<c:if test="${!finalized}">
 	<div class="form">
-		<form action="finalizeReport" method="POST">
+		<form action="createReport" method="POST">
 			<input type="hidden" name="id" value="${requestScope.id}" />
 			<p>
 				<input type="submit"
