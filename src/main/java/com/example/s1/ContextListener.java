@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
- * Context listener. Initializes i18n and CommandManager for future use.
+ * Context listener. Initializes i18n.
  */
 @Slf4j
 @Component

@@ -1,6 +1,5 @@
 package com.example.s1;
 
-import com.example.s1.controllers.ProfileController;
 import com.example.s1.model.Applicant;
 import com.example.s1.model.User;
 import com.example.s1.repository.ApplicantRepository;
@@ -15,8 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.ui.ModelMap;
 
 import javax.servlet.http.HttpSession;
 
