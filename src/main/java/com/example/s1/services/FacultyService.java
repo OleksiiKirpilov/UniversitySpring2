@@ -2,9 +2,9 @@ package com.example.s1.services;
 
 import com.example.s1.model.*;
 import com.example.s1.repository.*;
-import com.example.s1.utils.Fields;
-import com.example.s1.utils.InputValidator;
-import com.example.s1.utils.Path;
+import com.example.s1.util.Fields;
+import com.example.s1.util.InputValidator;
+import com.example.s1.util.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
-import static com.example.s1.utils.MessageHelper.*;
+import static com.example.s1.util.MessageHelper.*;
 
 
 @Slf4j
@@ -187,7 +187,7 @@ public class FacultyService {
             return Path.FORWARD_FACULTY_VIEW_USER;
         }
         Iterable<Applicant> applicants = applicantRepository.findAllByFacultyId(facultyRecord.getId());
-        Map<Applicant, String> facultyApplicants = new TreeMap<>(Comparator.comparingLong(Applicant::getId));
+        Map<Applicant, String> facultyApplicants = new LinkedHashMap<>();
         for (Applicant applicant : applicants) {
             User user = userRepository.findById(applicant.getUserId()).orElse(null);
             if (user == null) {

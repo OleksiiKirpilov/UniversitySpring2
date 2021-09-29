@@ -1,4 +1,4 @@
-package com.example.s1.model;
+package com.example.s1.util;
 
 /**
  * Language code enum

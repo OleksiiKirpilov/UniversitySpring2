@@ -1,4 +1,4 @@
-package com.example.s1.utils;
+package com.example.s1.util;
 
 /**
  * Class with utility methods for checking input values send from the user.

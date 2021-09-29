@@ -2,11 +2,11 @@ package com.example.s1;
 
 import com.example.s1.controllers.ProfileController;
 import com.example.s1.model.Applicant;
-import com.example.s1.model.Lang;
+import com.example.s1.util.Lang;
 import com.example.s1.model.User;
 import com.example.s1.repository.ApplicantRepository;
 import com.example.s1.repository.UserRepository;
-import com.example.s1.utils.Path;
+import com.example.s1.util.Path;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

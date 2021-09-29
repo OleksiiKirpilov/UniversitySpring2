@@ -1,17 +1,23 @@
 package com.example.s1.services;
 
 import com.example.s1.model.Applicant;
+import com.example.s1.model.Grade;
+import com.example.s1.model.Subject;
 import com.example.s1.model.User;
 import com.example.s1.repository.ApplicantRepository;
+import com.example.s1.repository.GradeRepository;
+import com.example.s1.repository.SubjectRepository;
 import com.example.s1.repository.UserRepository;
-import com.example.s1.utils.Path;
+import com.example.s1.util.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
-import javax.servlet.http.HttpSession;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -21,9 +27,13 @@ public class ApplicantService {
     UserRepository userRepository;
     @Autowired
     ApplicantRepository applicantRepository;
+    @Autowired
+    GradeRepository gradeRepository;
+    @Autowired
+    SubjectRepository subjectRepository;
 
     @Transactional
-    public void saveApplicant(HttpSession session, User user, String city, String district, String school) {
+    public void saveApplicant(User user, String city, String district, String school) {
         userRepository.save(user);
         log.trace("User record created: {}", user);
         Applicant applicant = new Applicant(city, district, school, user.getId(), false);
@@ -51,11 +61,34 @@ public class ApplicantService {
             log.error("Can not found user with id = {}", userId);
             return Path.ERROR_PAGE;
         }
-        map.put("user", user);
         Applicant applicant = applicantRepository.findByUserId(user.getId());
+        List<Grade> grades = gradeRepository.findAllByApplicantId(applicant.getId());
+        Map<Grade, Subject> preliminaryGrades = new LinkedHashMap<>();
+        Map<Grade, Subject> dimplomaGrades = new LinkedHashMap<>();
+        for (Grade g : grades) {
+            Subject subject = subjectRepository.findById(g.getSubjectId()).orElse(null);
+            if (g.getExamType().equals("preliminary")) {
+                preliminaryGrades.put(g, subject);
+            } else {
+                dimplomaGrades.put(g, subject);
+            }
+        }
+        boolean notConfirmed = grades.stream().anyMatch(g -> !g.isConfirmed());
+        map.put("user", user);
         map.put("applicant", applicant);
+        map.put("preliminaryGrades", preliminaryGrades);
+        map.put("diplomaGrades", dimplomaGrades);
+        map.put("notConfirmed", notConfirmed);
         return Path.FORWARD_APPLICANT_PROFILE;
     }
 
+    @Transactional
+    public void confirmGrades(Long id) {
+        List<Grade> grades = gradeRepository.findAllByApplicantId(id);
+        for (Grade g : grades) {
+            g.setConfirmed(true);
+        }
+        gradeRepository.saveAll(grades);
+    }
 
 }

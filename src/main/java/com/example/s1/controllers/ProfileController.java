@@ -6,8 +6,8 @@ import com.example.s1.repository.ApplicantRepository;
 import com.example.s1.repository.UserRepository;
 import com.example.s1.services.ApplicantService;
 import com.example.s1.services.ProfileService;
-import com.example.s1.utils.InputValidator;
-import com.example.s1.utils.Path;
+import com.example.s1.util.InputValidator;
+import com.example.s1.util.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
-import static com.example.s1.utils.MessageHelper.*;
+import static com.example.s1.util.MessageHelper.*;
 
 /**
  * Profile related controller
@@ -85,7 +85,7 @@ public class ProfileController {
             return Path.REDIRECT_USER_REGISTRATION_PAGE;
         }
         user = new User(email, password, firstName, lastName, Role.USER_ROLE_NAME, lang);
-        applicantService.saveApplicant(session, user, city, district, school);
+        applicantService.saveApplicant(user, city, district, school);
         profileService.setUserAuthorities(user, session);
         return Path.REDIRECT_TO_PROFILE;
     }

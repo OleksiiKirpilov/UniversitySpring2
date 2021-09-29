@@ -5,7 +5,7 @@ import com.example.s1.repository.FacultySubjectsRepository;
 import com.example.s1.repository.GradeRepository;
 import com.example.s1.repository.SubjectRepository;
 import com.example.s1.services.SubjectService;
-import com.example.s1.utils.Path;
+import com.example.s1.util.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

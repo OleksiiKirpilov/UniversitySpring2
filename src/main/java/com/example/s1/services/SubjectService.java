@@ -6,8 +6,8 @@ import com.example.s1.model.Subject;
 import com.example.s1.repository.FacultySubjectsRepository;
 import com.example.s1.repository.GradeRepository;
 import com.example.s1.repository.SubjectRepository;
-import com.example.s1.utils.InputValidator;
-import com.example.s1.utils.Path;
+import com.example.s1.util.InputValidator;
+import com.example.s1.util.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static com.example.s1.utils.MessageHelper.ERROR_FILL_ALL_FIELDS;
-import static com.example.s1.utils.MessageHelper.setErrorMessage;
+import static com.example.s1.util.MessageHelper.ERROR_FILL_ALL_FIELDS;
+import static com.example.s1.util.MessageHelper.setErrorMessage;
 
 @Slf4j
 @Service

@@ -5,8 +5,8 @@ import com.example.s1.model.Subject;
 import com.example.s1.repository.*;
 import com.example.s1.services.FacultyService;
 import com.example.s1.services.ReportService;
-import com.example.s1.utils.InputValidator;
-import com.example.s1.utils.Path;
+import com.example.s1.util.InputValidator;
+import com.example.s1.util.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import static com.example.s1.utils.MessageHelper.ERROR_FILL_ALL_FIELDS;
-import static com.example.s1.utils.MessageHelper.setErrorMessage;
+import static com.example.s1.util.MessageHelper.ERROR_FILL_ALL_FIELDS;
+import static com.example.s1.util.MessageHelper.setErrorMessage;
 
 /**
  * Faculty related controller

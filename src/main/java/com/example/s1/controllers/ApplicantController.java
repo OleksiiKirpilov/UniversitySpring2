@@ -1,6 +1,7 @@
 package com.example.s1.controllers;
 
 import com.example.s1.services.ApplicantService;
+import com.example.s1.util.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -28,4 +29,10 @@ public class ApplicantController {
         return applicantService.updateApplicantStatus(id);
     }
 
+    @PostMapping("/confirmGrades")
+    public String confirmGrades(@RequestParam Long id,
+                                @RequestParam Long userId) {
+        applicantService.confirmGrades(id);
+        return Path.REDIRECT_APPLICANT_PROFILE + userId;
+    }
 }

@@ -5,9 +5,9 @@ import com.example.s1.model.Role;
 import com.example.s1.model.User;
 import com.example.s1.repository.ApplicantRepository;
 import com.example.s1.repository.UserRepository;
-import com.example.s1.utils.Fields;
-import com.example.s1.utils.InputValidator;
-import com.example.s1.utils.Path;
+import com.example.s1.util.Fields;
+import com.example.s1.util.InputValidator;
+import com.example.s1.util.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,8 +24,8 @@ import javax.servlet.jsp.jstl.core.Config;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.s1.utils.Fields.USER_LANG;
-import static com.example.s1.utils.MessageHelper.*;
+import static com.example.s1.util.Fields.USER_LANG;
+import static com.example.s1.util.MessageHelper.*;
 
 @Slf4j
 @Service

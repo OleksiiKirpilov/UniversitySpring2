@@ -1,7 +1,7 @@
 package com.example.s1.controllers;
 
-import com.example.s1.model.Lang;
-import com.example.s1.utils.Path;
+import com.example.s1.util.Lang;
+import com.example.s1.util.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

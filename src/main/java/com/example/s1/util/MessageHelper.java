@@ -1,4 +1,4 @@
-package com.example.s1.utils;
+package com.example.s1.util;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
