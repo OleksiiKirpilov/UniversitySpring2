@@ -201,7 +201,7 @@ public class FacultyService {
         return Path.FORWARD_FACULTY_VIEW_ADMIN;
     }
 
-    public String applyFacultyGetInfo(String nameEn, ModelMap map) {
+    public String applyFacultyPage(String nameEn, ModelMap map) {
         Faculty faculty = facultyRepository.findByNameEn(nameEn);
         map.put("faculty", faculty);
         Iterable<Subject> facultySubjects = subjectRepository.findAllByFacultyId(faculty.getId());
@@ -240,13 +240,14 @@ public class FacultyService {
                 Long subjectId = Long.parseLong(subjectIdAndExamType[0]);
                 String examType = subjectIdAndExamType[1];
                 Grade grade = new Grade(subjectId, applicant.getId(), gradeValue, examType);
-                Grade oldgrade = gradeRepository
+                Grade oldGrade = gradeRepository
                         .findBySubjectIdAndApplicantIdAndExamType(subjectId, applicant.getId(), examType);
-                if (oldgrade == null) {
+                if (oldGrade == null || !oldGrade.isConfirmed()) {
                     gradeRepository.save(grade);
                     log.trace("Grade record was created in database: {}", grade);
-                } else
-                    log.trace("Grade already exists. {}", oldgrade);
+                } else {
+                    log.trace("Grade already exists. {}", oldGrade);
+                }
             }
         }
         facultyApplicantsRepository.save(newFacultyApplicant);

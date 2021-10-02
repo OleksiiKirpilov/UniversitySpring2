@@ -121,13 +121,13 @@ public class FacultyController {
     }
 
     @GetMapping("/applyFaculty")
-    public String applyFaculty(@RequestParam(name = "name_en") String nameEn,
+    public String applyFacultyPage(@RequestParam(name = "name_en") String nameEn,
                                ModelMap map) {
-        return facultyService.applyFacultyGetInfo(nameEn, map);
+        return facultyService.applyFacultyPage(nameEn, map);
     }
 
     @PostMapping("/applyFaculty")
-    public String applyFacultyPost(HttpSession session,
+    public String applyFaculty(HttpSession session,
                                    @RequestParam Long id,
                                    HttpServletRequest request) {
         return facultyService.applyFaculty(session, id, request);
