@@ -102,22 +102,24 @@ public class FacultyService {
     }
 
     @Transactional
-    public String updateFaculty(String oldFacultyName,
-                                String nameEn, String nameRu,
-                                String facultyTotalPlaces, String facultyBudgetPlaces,
-                                String[] oldCheckedSubjectsIds, String[] newCheckedSubjectsIds) {
-        int totalPlaces = Integer.parseInt(facultyTotalPlaces);
-        int budgetPlaces = Integer.parseInt(facultyBudgetPlaces);
-        Faculty faculty = new Faculty(nameRu, nameEn, budgetPlaces, totalPlaces);
+    public String updateFaculty(String oldFacultyName, Faculty faculty,
+                                String[] oldCheckedSubjectsIds, String[] newCheckedSubjectsIds,
+                                HttpServletRequest request) {
         Faculty oldFacultyRecord = facultyRepository.findByNameEn(oldFacultyName);
         faculty.setId(oldFacultyRecord.getId());
+        List<Applicant> facultyApplicants = new ArrayList<>();
+        applicantRepository.findAllByFacultyId(faculty.getId()).forEach(facultyApplicants::add);
+        if (!facultyApplicants.isEmpty()) {
+            setErrorMessage(request.getSession(), ERROR_FACULTY_DEPENDS);
+            return Path.REDIRECT_TO_FACULTY + faculty.getNameEn();
+        }
         facultyRepository.save(faculty);
         log.trace("Faculty record updated from: {}, to: {}", oldFacultyRecord, faculty);
         if (oldCheckedSubjectsIds == null) {
             if (newCheckedSubjectsIds == null) {
                 // if before all subjects were unchecked and they still
                 // are then nothing changed - do nothing
-                return Path.REDIRECT_TO_FACULTY + nameEn;
+                return Path.REDIRECT_TO_FACULTY + faculty.getNameEn();
             }
             // if user checked something,but before no subjects were checked
             for (String newCheckedSubject : newCheckedSubjectsIds) {
@@ -126,12 +128,12 @@ public class FacultyService {
                 facultySubjectsRepository.save(facultySubject);
                 log.trace("Faculty subjects record was created: {}", facultySubject);
             }
-            return Path.REDIRECT_TO_FACULTY + nameEn;
+            return Path.REDIRECT_TO_FACULTY + faculty.getNameEn();
         }
         if (newCheckedSubjectsIds == null) {
             // if user unchecked all checkboxes and before there were some checked subjects
             facultySubjectsRepository.deleteAllByFacultyId(faculty.getId());
-            return Path.REDIRECT_TO_FACULTY + nameEn;
+            return Path.REDIRECT_TO_FACULTY + faculty.getNameEn();
         }
         // if there were checked subjects and still are
         // then for INSERT we should check if the record already exists in db
@@ -160,7 +162,7 @@ public class FacultyService {
                         faculty.getId(), subjectId);
             }
         }
-        return Path.REDIRECT_TO_FACULTY + nameEn;
+        return Path.REDIRECT_TO_FACULTY + faculty.getNameEn();
     }
 
     public String viewFaculty(String nameEn, ModelMap map, HttpSession session) {

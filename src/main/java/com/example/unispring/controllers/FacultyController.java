@@ -113,8 +113,11 @@ public class FacultyController {
             log.debug("errorMessage: Not all fields are properly filled");
             return Path.REDIRECT_FACULTY_EDIT_ADMIN + oldFacultyName;
         }
-        return facultyService.updateFaculty(oldFacultyName, nameEn, nameRu, facultyTotalPlaces,
-                facultyBudgetPlaces, oldCheckedSubjectsIds, newCheckedSubjectsIds);
+        int totalPlaces = Integer.parseInt(facultyTotalPlaces);
+        int budgetPlaces = Integer.parseInt(facultyBudgetPlaces);
+        Faculty faculty = new Faculty(nameRu, nameEn, budgetPlaces, totalPlaces);
+        return facultyService.updateFaculty(oldFacultyName, faculty,
+                oldCheckedSubjectsIds, newCheckedSubjectsIds, request);
     }
 
     @GetMapping("/applyFaculty")

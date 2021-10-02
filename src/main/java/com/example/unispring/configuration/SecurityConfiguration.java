@@ -35,8 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login",
                         "/viewAllFaculties",
                         "/viewFaculty",
-                        "/setSessionLanguage").permitAll()
-        ;
+                        "/setSessionLanguage").permitAll();
     }
 
 }
