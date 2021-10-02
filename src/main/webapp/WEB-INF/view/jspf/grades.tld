@@ -10,7 +10,7 @@
 	<tag>
 		<description>Tag that illuminates bad entered data by the client. Two attributes are required: 'subjectId' and 'examType'. They will be concatenated and later treated as one name.</description>
 		<name>insert</name>
-		<tag-class>com.example.s1.GradesTag</tag-class>
+		<tag-class>com.example.unispring.GradesTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<description>Subject ID</description>
