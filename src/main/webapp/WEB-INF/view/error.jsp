@@ -3,7 +3,6 @@
 <%@ page isErrorPage="true"%>
 <html>
 <%@ include file="/WEB-INF/view/jspf/head.jspf"%>
-<c:set var="title" value="Error" scope="page" />
 
 <body>
 <%@ include file="/WEB-INF/view/jspf/header.jspf" %>

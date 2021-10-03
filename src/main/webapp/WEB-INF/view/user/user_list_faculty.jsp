@@ -2,6 +2,7 @@
 <%@ include file="/WEB-INF/view/jspf/taglib.jspf"%>
 <html>
 <%@ include file="/WEB-INF/view/jspf/head.jspf"%>
+
 <body>
 	<%@ include file="/WEB-INF/view/jspf/header.jspf"%>
 	<div class="header">

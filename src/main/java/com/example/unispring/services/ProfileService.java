@@ -72,7 +72,7 @@ public class ProfileService {
         map.put(Fields.USER_FIRST_NAME, user.getFirstName());
         map.put(Fields.USER_LAST_NAME, user.getLastName());
         map.put(Fields.USER_EMAIL, user.getEmail());
-        map.put(Fields.USER_PASSWORD, "***");
+        map.put(Fields.USER_PASSWORD, "");
         map.put(USER_LANG, user.getLang());
         if (Role.isAdmin(role)) {
             return Path.FORWARD_ADMIN_PROFILE_EDIT;

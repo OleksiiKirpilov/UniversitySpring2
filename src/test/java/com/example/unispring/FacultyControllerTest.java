@@ -33,7 +33,7 @@ class FacultyControllerTest {
     FacultyRepository facultyRepository;
 
     @Test
-    void shouldViewFaculty() throws Exception {
+    void shouldViewFaculty() {
         HttpSession session = mock(HttpSession.class);
         ModelMap map = mock(ModelMap.class);
         Faculty faculty = new Faculty("Тестовый факультет", "Test faculty", 1, 2);
@@ -44,7 +44,7 @@ class FacultyControllerTest {
     }
 
     @Test
-    void shouldViewFacultyAdmin() throws Exception {
+    void shouldViewFacultyAdmin() {
         HttpSession session = mock(HttpSession.class);
         when(session.getAttribute("userRole")).thenReturn("admin");
         ModelMap map = mock(ModelMap.class);
@@ -56,7 +56,7 @@ class FacultyControllerTest {
     }
 
     @Test
-    void shouldViewAllFaculties() throws Exception {
+    void shouldViewAllFaculties() {
         HttpSession session = mock(HttpSession.class);
         HttpServletRequest request = mock(HttpServletRequest.class);
         String result = facultyController.list(session, request);
@@ -64,7 +64,7 @@ class FacultyControllerTest {
     }
 
     @Test
-    void shouldDoCrudWithFaculty() throws Exception {
+    void shouldDoCrudWithFaculty() {
         HttpSession session = mock(HttpSession.class);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(session.getAttribute("userRole")).thenReturn("admin");

@@ -242,9 +242,13 @@ public class FacultyService {
                 Grade grade = new Grade(subjectId, applicant.getId(), gradeValue, examType);
                 Grade oldGrade = gradeRepository
                         .findBySubjectIdAndApplicantIdAndExamType(subjectId, applicant.getId(), examType);
-                if (oldGrade == null || !oldGrade.isConfirmed()) {
+                if (oldGrade == null) {
                     gradeRepository.save(grade);
                     log.trace("Grade record was created in database: {}", grade);
+                } else if (!oldGrade.isConfirmed()) {
+                    grade.setId(oldGrade.getId());
+                    gradeRepository.save(grade);
+                    log.trace("Grade record was updated in database: {}", grade);
                 } else {
                     log.trace("Grade already exists. {}", oldGrade);
                 }

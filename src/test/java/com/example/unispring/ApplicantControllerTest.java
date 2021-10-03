@@ -1,7 +1,6 @@
 package com.example.unispring;
 
 import com.example.unispring.controllers.ApplicantController;
-import com.example.unispring.controllers.ProfileController;
 import com.example.unispring.model.Applicant;
 import com.example.unispring.model.User;
 import com.example.unispring.repository.ApplicantRepository;
@@ -15,10 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.ui.ModelMap;
-
-import javax.servlet.http.HttpSession;
 
 import static org.mockito.Mockito.mock;
 
@@ -27,12 +23,6 @@ import static org.mockito.Mockito.mock;
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = UnispringApplication.class)
 class ApplicantControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ProfileController profileController;
 
     @Autowired
     private ApplicantRepository applicantRepository;
@@ -44,8 +34,7 @@ class ApplicantControllerTest {
     private ApplicantController applicantController;
 
     @Test
-    void shouldViewApplicant() throws Exception {
-        HttpSession session = mock(HttpSession.class);
+    void shouldViewApplicant() {
         ModelMap map = mock(ModelMap.class);
         User user = userRepository.findByEmail("ivanov@gmail.com");
         Applicant ap = applicantRepository.findByUserId(user.getId());
