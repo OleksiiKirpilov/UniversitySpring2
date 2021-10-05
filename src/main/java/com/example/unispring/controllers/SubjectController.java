@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Subject related controller
@@ -64,8 +65,8 @@ public class SubjectController {
     }
 
     @PostMapping("/deleteSubject")
-    public String delete(@RequestParam Long id) {
-        return subjectService.delete(id);
+    public String delete(@RequestParam Long id, HttpServletRequest request) {
+        return subjectService.delete(id, request);
     }
 
     @GetMapping("/editSubject")

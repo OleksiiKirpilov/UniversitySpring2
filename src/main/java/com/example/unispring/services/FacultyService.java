@@ -75,8 +75,6 @@ public class FacultyService {
         Faculty faculty = new Faculty(nameRu, nameEn, budget, total);
         facultyRepository.save(faculty);
         log.trace("Create faculty record in database: {}", faculty);
-        // only after creating a faculty record we can proceed with
-        // adding faculty subjects
         if (subjects != null) {
             List<FacultySubjects> newFS = new ArrayList<>();
             for (Long id : subjects) {
@@ -90,8 +88,7 @@ public class FacultyService {
 
     public String deleteFaculty(Long id, HttpSession session) {
         Faculty facultyToDelete = facultyRepository.findById(id).orElse(null);
-        List<Applicant> facultyApplicants = new ArrayList<>();
-        applicantRepository.findAllByFacultyId(id).forEach(facultyApplicants::add);
+        List<Applicant> facultyApplicants = applicantRepository.findAllByFacultyId(id);
         if (!facultyApplicants.isEmpty()) {
             setErrorMessage(session, ERROR_FACULTY_DEPENDS);
             return Path.REDIRECT_TO_FACULTY + facultyToDelete.getNameEn();
@@ -107,8 +104,7 @@ public class FacultyService {
                                 HttpServletRequest request) {
         Faculty oldFacultyRecord = facultyRepository.findByNameEn(oldFacultyName);
         faculty.setId(oldFacultyRecord.getId());
-        List<Applicant> facultyApplicants = new ArrayList<>();
-        applicantRepository.findAllByFacultyId(faculty.getId()).forEach(facultyApplicants::add);
+        List<Applicant> facultyApplicants = applicantRepository.findAllByFacultyId(faculty.getId());
         if (!facultyApplicants.isEmpty()) {
             setErrorMessage(request.getSession(), ERROR_FACULTY_DEPENDS);
             return Path.REDIRECT_TO_FACULTY + faculty.getNameEn();
@@ -204,9 +200,9 @@ public class FacultyService {
     public String applyFacultyPage(String nameEn, ModelMap map) {
         Faculty faculty = facultyRepository.findByNameEn(nameEn);
         map.put("faculty", faculty);
-        Iterable<Subject> facultySubjects = subjectRepository.findAllByFacultyId(faculty.getId());
+        List<Subject> facultySubjects = subjectRepository.findAllByFacultyId(faculty.getId());
         map.put("facultySubjects", facultySubjects);
-        Iterable<Subject> allSubjects = subjectRepository.findAll();
+        List<Subject> allSubjects = subjectRepository.findAll();
         map.put("allSubjects", allSubjects);
         return Path.FORWARD_FACULTY_APPLY_USER;
     }
@@ -215,7 +211,6 @@ public class FacultyService {
     public String applyFaculty(HttpSession session,
                                Long facultyId,
                                HttpServletRequest request) {
-        log.trace("Start processing applying for faculty form");
         String email = String.valueOf(session.getAttribute("user"));
         User user = userRepository.findByEmail(email);
         Applicant applicant = applicantRepository.findByUserId(user.getId());
@@ -225,7 +220,6 @@ public class FacultyService {
         FacultyApplicants existingRecord =
                 facultyApplicantsRepository.findByFacultyIdAndApplicantId(facultyId, applicant.getId());
         if (existingRecord != null) {
-            // user is already applied
             log.trace("User: {} with Applicant record: {} already applied for faculty with id: {}",
                     user, applicant, facultyId);
             return Path.REDIRECT_TO_VIEW_ALL_FACULTIES;

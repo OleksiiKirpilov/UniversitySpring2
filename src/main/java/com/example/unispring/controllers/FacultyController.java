@@ -104,8 +104,6 @@ public class FacultyController {
                               @RequestParam(name = "oldCheckedSubjects") String[] oldCheckedSubjectsIds,
                               @RequestParam(name = "subjects") String[] newCheckedSubjectsIds,
                               HttpServletRequest request) {
-        // if user changes faculty name we need to know the old one
-        // to update record in db
         boolean valid = InputValidator.validateFacultyParameters(nameRu,
                 nameEn, facultyBudgetPlaces, facultyTotalPlaces);
         if (!valid) {

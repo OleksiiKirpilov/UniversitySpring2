@@ -64,7 +64,7 @@ class SubjectControllerTest {
         result = subjectController.edit(nameEn, nameEn, nameRu, request);
         Assertions.assertEquals(Path.REDIRECT_TO_SUBJECT + nameEn, result);
         subject = subjectRepository.findSubjectByNameEnEquals(nameEn);
-        result = subjectController.delete(subject.getId());
+        result = subjectController.delete(subject.getId(), request);
         Assertions.assertEquals(Path.REDIRECT_TO_VIEW_ALL_SUBJECTS, result);
     }
 

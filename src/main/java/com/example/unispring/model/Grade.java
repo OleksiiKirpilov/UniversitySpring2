@@ -7,9 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * Grade entity. Has foreign keys from subject and applicant, and grade value.
- * So every grade references to specific subject and
- * applicant that get it on some exam.
+ * Grade entity.
  */
 @Entity
 @Data

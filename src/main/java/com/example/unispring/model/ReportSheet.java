@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * Entity for report sheet.
+ */
 @Entity
 @Data
 @Table

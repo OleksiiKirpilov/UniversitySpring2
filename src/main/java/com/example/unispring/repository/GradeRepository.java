@@ -12,4 +12,6 @@ public interface GradeRepository extends CrudRepository<Grade, Long> {
 
     List<Grade> findAllByApplicantId(Long id);
 
+    boolean existsAllBySubjectId(Long id);
+
 }

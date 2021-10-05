@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static com.example.unispring.util.MessageHelper.ERROR_FILL_ALL_FIELDS;
-import static com.example.unispring.util.MessageHelper.setErrorMessage;
+import static com.example.unispring.util.MessageHelper.*;
 
 @Slf4j
 @Service
@@ -63,36 +63,27 @@ public class SubjectService {
         return Path.REDIRECT_TO_SUBJECT + nameEn;
     }
 
-    public String delete(Long id) {
+    public String delete(Long id, HttpServletRequest request) {
+        HttpSession session = request.getSession();
         Subject subjectToDelete = subjectRepository.findById(id).orElse(null);
         if (subjectToDelete == null) {
             return Path.FORWARD_SUBJECT_VIEW_ALL_ADMIN;
         }
-        Collection<FacultySubjects> facultySubjects = new ArrayList<>();
-        for (FacultySubjects fs : facultySubjectsRepository.findAll()) {
-            if (fs.getSubjectId().equals(subjectToDelete.getId())) {
-                facultySubjects.add(fs);
-            }
-        }
         String result;
-        if (facultySubjects.isEmpty()) {
+        if (!facultySubjectsRepository.existsAllBySubjectId(subjectToDelete.getId())) {
             log.trace("No faculties have this subject as preliminary. Check applicant grades.");
-            Collection<Grade> grades = new ArrayList<>();
-            for (Grade g : gradeRepository.findAll()) {
-                if (g.getSubjectId().equals(subjectToDelete.getId())) {
-                    grades.add(g);
-                }
-            }
-            if (grades.isEmpty()) {
+            if (!gradeRepository.existsAllBySubjectId(subjectToDelete.getId())) {
                 log.trace("No grades records on this subject. Perform deleting.");
                 subjectRepository.delete(subjectToDelete);
                 result = Path.REDIRECT_TO_VIEW_ALL_SUBJECTS;
             } else {
+                setErrorMessage(session, ERROR_SUBJECT_DELETE);
                 log.trace("There are grades records that rely on this subject.");
                 result = Path.REDIRECT_TO_SUBJECT + subjectToDelete.getNameEn();
             }
             return result;
         }
+        setErrorMessage(session, ERROR_SUBJECT_DELETE);
         log.trace("There are faculties that have this subject as preliminary.");
         return Path.REDIRECT_TO_SUBJECT + subjectToDelete.getNameEn();
     }

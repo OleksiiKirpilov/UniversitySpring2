@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+/**
+ * DTO for report sheet.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

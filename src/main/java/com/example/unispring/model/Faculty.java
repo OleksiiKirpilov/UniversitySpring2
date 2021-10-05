@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * Faculty entity. Has name, amount of budget and total places.
+ * Faculty entity. It has a name, amount of budget and total places.
  * The amount of budget places must always be less than amount
  * of total places.
  */

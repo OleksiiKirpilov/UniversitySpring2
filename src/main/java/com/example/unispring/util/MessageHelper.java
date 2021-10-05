@@ -11,6 +11,8 @@ public final class MessageHelper {
     public static final String ERROR_EMAIL_USED = "error_message.email_in_use";
     public static final String MESSAGE_ACCOUNT_CREATED = "profile.view_jsp.message.account_created";
     public static final String ERROR_FACULTY_EXISTS = "error_message.faculty_exists";
+    public static final String ERROR_SUBJECT_DELETE = "error_message.subject_delete";
+
 
     public static void setErrorMessage(HttpServletRequest request, String messageKey) {
         setMessage(request, "errorMessage", messageKey);

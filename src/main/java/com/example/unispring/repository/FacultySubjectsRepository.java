@@ -9,4 +9,6 @@ public interface FacultySubjectsRepository extends CrudRepository<FacultySubject
 
     void deleteByFacultyIdAndSubjectId(Long facultyId, Long subjectId);
 
+    boolean existsAllBySubjectId(Long id);
+
 }
