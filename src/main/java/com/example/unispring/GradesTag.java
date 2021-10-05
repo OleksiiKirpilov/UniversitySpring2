@@ -11,8 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * Custom tag class for faculty user form. The main purpose is
- * to remove the need of validation in ApplyFacultyView command.
+ * Custom tag class for faculty user form.
  * The maximum grade in subject is equal to 12, the lower one is zero.
  */
 @Getter
