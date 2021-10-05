@@ -50,7 +50,7 @@
             <div class="field">
                 <p>
                     <label>
-                        <c:out value="${lang eq 'ru' ? facultySubject.nameRu : facultySubject.nameEn}"></c:out>
+                        <c:out value="${lang eq 'ru' ? facultySubject.nameRu : facultySubject.nameEn}"> </c:out>
                     </label>
                     <grades:insert subjectId="${facultySubject.id}" examType="preliminary"/>
                 </p>
@@ -64,18 +64,16 @@
         <c:forEach var="subject" items="${allSubjects}">
             <div class="field">
                 <p>
-                    <label><c:out
-                            value="${lang eq 'ru' ? subject.nameRu : subject.nameEn}">
-                    </c:out></label>
+                    <label>
+                        <c:out value="${lang eq 'ru' ? subject.nameRu : subject.nameEn}"> </c:out>
+                    </label>
                 <p>
-
-                        <grades:insert subjectId="${subject.id}" examType="diploma"/>
+                <grades:insert subjectId="${subject.id}" examType="diploma"/>
             </div>
         </c:forEach>
 
         <p>
-            <input type="submit"
-                   value="<fmt:message key="faculty.apply_jsp.button.submit" />">
+            <input type="submit" value="<fmt:message key="faculty.apply_jsp.button.submit" />">
         </p>
     </form>
 </div>
