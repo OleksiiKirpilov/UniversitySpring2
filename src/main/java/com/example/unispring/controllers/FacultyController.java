@@ -29,25 +29,16 @@ import static com.example.unispring.util.MessageHelper.setErrorMessage;
 public class FacultyController {
 
     @Autowired
-    FacultyRepository facultyRepository;
+    private FacultyRepository facultyRepository;
+
     @Autowired
-    UserRepository userRepository;
+    private SubjectRepository subjectRepository;
+
     @Autowired
-    ApplicantRepository applicantRepository;
+    private ReportService reportService;
+
     @Autowired
-    SubjectRepository subjectRepository;
-    @Autowired
-    FacultySubjectsRepository facultySubjectsRepository;
-    @Autowired
-    FacultyApplicantsRepository facultyApplicantsRepository;
-    @Autowired
-    GradeRepository gradeRepository;
-    @Autowired
-    ReportSheetRepository reportSheetRepository;
-    @Autowired
-    ReportService reportService;
-    @Autowired
-    FacultyService facultyService;
+    private FacultyService facultyService;
 
 
     @GetMapping("/viewAllFaculties")
@@ -120,14 +111,14 @@ public class FacultyController {
 
     @GetMapping("/applyFaculty")
     public String applyFacultyPage(@RequestParam(name = "name_en") String nameEn,
-                               ModelMap map) {
+                                   ModelMap map) {
         return facultyService.applyFacultyPage(nameEn, map);
     }
 
     @PostMapping("/applyFaculty")
     public String applyFaculty(HttpSession session,
-                                   @RequestParam Long id,
-                                   HttpServletRequest request) {
+                               @RequestParam Long id,
+                               HttpServletRequest request) {
         return facultyService.applyFaculty(session, id, request);
     }
 

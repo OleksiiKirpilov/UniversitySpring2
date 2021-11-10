@@ -24,13 +24,17 @@ import java.util.Map;
 public class ApplicantService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
     @Autowired
-    ApplicantRepository applicantRepository;
+    private ApplicantRepository applicantRepository;
+
     @Autowired
-    GradeRepository gradeRepository;
+    private GradeRepository gradeRepository;
+
     @Autowired
-    SubjectRepository subjectRepository;
+    private SubjectRepository subjectRepository;
+
 
     @Transactional
     public void saveApplicant(User user, String city, String district, String school) {

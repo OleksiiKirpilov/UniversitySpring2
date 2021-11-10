@@ -31,10 +31,14 @@ import static com.example.unispring.util.MessageHelper.*;
 @Service
 public class ProfileService {
 
+    private static final String USER_ROLE = "userRole";
+    private static final String USER = "user";
+
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
     @Autowired
-    ApplicantRepository applicantRepository;
+    private ApplicantRepository applicantRepository;
 
 
     public String login(String email, String password, HttpSession session) {
@@ -49,7 +53,7 @@ public class ProfileService {
     }
 
     public String viewProfile(HttpSession session, ModelMap map) {
-        String userEmail = String.valueOf(session.getAttribute("user"));
+        String userEmail = String.valueOf(session.getAttribute(USER));
         User user = userRepository.findByEmail(userEmail);
         map.put("user", user);
         String role = user.getRole();
@@ -65,8 +69,8 @@ public class ProfileService {
     }
 
     public String editProfilePage(HttpSession session, ModelMap map) {
-        String userEmail = String.valueOf(session.getAttribute("user"));
-        String role = String.valueOf(session.getAttribute("userRole"));
+        String userEmail = String.valueOf(session.getAttribute(USER));
+        String role = String.valueOf(session.getAttribute(USER_ROLE));
         User user = userRepository.findByEmail(userEmail);
 
         map.put(Fields.USER_FIRST_NAME, user.getFirstName());
@@ -94,7 +98,7 @@ public class ProfileService {
                               String city, String district, String school) {
         boolean valid = InputValidator.validateUserParameters(
                 firstName, lastName, email, password, lang);
-        String role = String.valueOf(session.getAttribute("userRole"));
+        String role = String.valueOf(session.getAttribute(USER_ROLE));
         if (!valid) {
             setErrorMessage(session, ERROR_FILL_ALL_FIELDS);
             log.debug("errorMessage: Not all fields are properly filled");
@@ -115,7 +119,7 @@ public class ProfileService {
             user.setLang(lang);
             userRepository.save(user);
             log.trace("User info updated. {}", user);
-            session.setAttribute("user", email);
+            session.setAttribute(USER, email);
             session.setAttribute(USER_LANG, lang);
             return Path.REDIRECT_TO_PROFILE;
         }
@@ -142,7 +146,7 @@ public class ProfileService {
             ap.setSchool(school);
             applicantRepository.save(ap);
             log.trace("Applicant info updated. {}", ap);
-            session.setAttribute("user", email);
+            session.setAttribute(USER, email);
             session.setAttribute(USER_LANG, lang);
             return Path.REDIRECT_TO_PROFILE;
         }
@@ -157,8 +161,8 @@ public class ProfileService {
         SecurityContext sc = SecurityContextHolder.getContext();
         sc.setAuthentication(token);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, sc);
-        session.setAttribute("user", user.getEmail());
-        session.setAttribute("userRole", user.getRole());
+        session.setAttribute(USER, user.getEmail());
+        session.setAttribute(USER_ROLE, user.getRole());
         session.setAttribute(USER_LANG, user.getLang());
         Config.set(session, Config.FMT_LOCALE, new java.util.Locale(user.getLang()));
         log.info("User: {} logged as {}", user, user.getRole());

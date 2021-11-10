@@ -27,10 +27,10 @@ import static org.mockito.Mockito.when;
 class FacultyControllerTest {
 
     @Autowired
-    FacultyController facultyController;
+    private FacultyController facultyController;
 
     @Autowired
-    FacultyRepository facultyRepository;
+    private FacultyRepository facultyRepository;
 
     @Test
     void shouldViewFaculty() {

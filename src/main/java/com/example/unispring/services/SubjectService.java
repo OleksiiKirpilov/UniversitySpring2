@@ -24,13 +24,13 @@ import static com.example.unispring.util.MessageHelper.*;
 public class SubjectService {
 
     @Autowired
-    SubjectRepository subjectRepository;
+    private SubjectRepository subjectRepository;
 
     @Autowired
-    FacultySubjectsRepository facultySubjectsRepository;
+    private FacultySubjectsRepository facultySubjectsRepository;
 
     @Autowired
-    GradeRepository gradeRepository;
+    private GradeRepository gradeRepository;
 
 
     public String add(String nameRu, String nameEn, HttpServletRequest request) {

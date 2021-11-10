@@ -28,10 +28,10 @@ import static org.mockito.Mockito.*;
 class SubjectControllerTest {
 
     @Autowired
-    SubjectController subjectController;
+    private SubjectController subjectController;
 
     @Autowired
-    SubjectRepository subjectRepository;
+    private SubjectRepository subjectRepository;
 
     @Test
     void shouldListAll() {

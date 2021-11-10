@@ -23,21 +23,28 @@ import static com.example.unispring.util.MessageHelper.*;
 public class FacultyService {
 
     @Autowired
-    FacultyRepository facultyRepository;
+    private FacultyRepository facultyRepository;
+
     @Autowired
-    FacultySubjectsRepository facultySubjectsRepository;
+    private FacultySubjectsRepository facultySubjectsRepository;
+
     @Autowired
-    SubjectRepository subjectRepository;
+    private SubjectRepository subjectRepository;
+
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
     @Autowired
-    ApplicantRepository applicantRepository;
+    private ApplicantRepository applicantRepository;
+
     @Autowired
-    FacultyApplicantsRepository facultyApplicantsRepository;
+    private FacultyApplicantsRepository facultyApplicantsRepository;
+
     @Autowired
-    GradeRepository gradeRepository;
+    private GradeRepository gradeRepository;
+
     @Autowired
-    ReportSheetRepository reportSheetRepository;
+    private ReportSheetRepository reportSheetRepository;
 
 
     public String viewAllFaculties(HttpSession session, HttpServletRequest request) {

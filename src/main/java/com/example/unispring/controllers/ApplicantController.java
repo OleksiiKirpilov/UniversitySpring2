@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ApplicantController {
 
     @Autowired
-    ApplicantService applicantService;
+    private ApplicantService applicantService;
 
     @GetMapping("/viewApplicant")
     public String viewApplicantPage(@RequestParam Long userId,

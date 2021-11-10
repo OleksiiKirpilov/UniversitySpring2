@@ -1,8 +1,6 @@
 package com.example.unispring.controllers;
 
 import com.example.unispring.model.Subject;
-import com.example.unispring.repository.FacultySubjectsRepository;
-import com.example.unispring.repository.GradeRepository;
 import com.example.unispring.repository.SubjectRepository;
 import com.example.unispring.services.SubjectService;
 import com.example.unispring.util.Path;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  * Subject related controller
@@ -25,16 +22,10 @@ import javax.servlet.http.HttpSession;
 public class SubjectController {
 
     @Autowired
-    SubjectRepository subjectRepository;
+    private SubjectRepository subjectRepository;
 
     @Autowired
-    FacultySubjectsRepository facultySubjectsRepository;
-
-    @Autowired
-    GradeRepository gradeRepository;
-
-    @Autowired
-    SubjectService subjectService;
+    private SubjectService subjectService;
 
 
     @GetMapping("/viewAllSubjects")

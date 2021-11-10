@@ -29,13 +29,13 @@ import static com.example.unispring.util.MessageHelper.*;
 public class ProfileController {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
     @Autowired
-    ApplicantRepository applicantRepository;
+    private ProfileService profileService;
+
     @Autowired
-    ProfileService profileService;
-    @Autowired
-    ApplicantService applicantService;
+    private ApplicantService applicantService;
 
 
     @GetMapping("/login")

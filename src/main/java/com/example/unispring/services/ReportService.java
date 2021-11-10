@@ -23,11 +23,13 @@ import java.util.List;
 public class ReportService {
 
     @Autowired
-    ReportSheetRepository reportSheetRepository;
+    private ReportSheetRepository reportSheetRepository;
+
     @Autowired
-    FacultyRepository facultyRepository;
+    private FacultyRepository facultyRepository;
+
     @Autowired
-    EntityManager em;
+    private EntityManager em;
 
 
     public String createReport(Long id, ModelMap map, boolean saveReport) {
