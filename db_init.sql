@@ -157,16 +157,10 @@ PRIMARY KEY (`id`)
 -- --------------- View applicants_grades_sum --------------
 CREATE OR REPLACE VIEW applicants_grades_sum AS
 SELECT
-    faculty_applicants.faculty_id AS `faculty_id`,
-    grades.applicant_id AS `applicant_id`,
-    SUM(CASE `exam_type`
-            WHEN 'preliminary' THEN grades.grade
-            ELSE 0
-        END) AS `preliminary_sum`,
-    SUM(CASE `exam_type`
-            WHEN 'diploma' THEN grades.grade
-            ELSE 0
-        END) AS `diploma_sum`
+    faculty_applicants.faculty_id                         AS `faculty_id`,
+    grades.applicant_id                                   AS `applicant_id`,
+    SUM(IF(`exam_type` = 'preliminary', grades.grade, 0)) AS `preliminary_sum`,
+    SUM(IF(`exam_type` = 'diploma', grades.grade, 0))     AS `diploma_sum`
 FROM
     faculty_applicants INNER JOIN grades
                                   ON faculty_applicants.applicant_id = grades.applicant_id
@@ -192,7 +186,7 @@ FROM
     applicants ON applicant_id = applicants.id
         INNER JOIN
     users ON applicants.users_id = users.id
-ORDER BY blocked ASC , `total_sum` DESC;
+ORDER BY blocked, `total_sum` DESC;
 
 -- ---------------- prepare users ----------------------------------
 INSERT INTO `users`

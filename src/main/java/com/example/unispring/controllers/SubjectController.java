@@ -5,7 +5,6 @@ import com.example.unispring.repository.SubjectRepository;
 import com.example.unispring.services.SubjectService;
 import com.example.unispring.util.Path;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,11 +20,13 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class SubjectController {
 
-    @Autowired
-    private SubjectRepository subjectRepository;
+    private final SubjectRepository subjectRepository;
+    private final SubjectService subjectService;
 
-    @Autowired
-    private SubjectService subjectService;
+    public SubjectController(SubjectRepository subjectRepository, SubjectService subjectService) {
+        this.subjectRepository = subjectRepository;
+        this.subjectService = subjectService;
+    }
 
 
     @GetMapping("/viewAllSubjects")

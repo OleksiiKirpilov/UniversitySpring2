@@ -1,7 +1,5 @@
 package com.example.unispring.services;
 
-import com.example.unispring.model.FacultySubjects;
-import com.example.unispring.model.Grade;
 import com.example.unispring.model.Subject;
 import com.example.unispring.repository.FacultySubjectsRepository;
 import com.example.unispring.repository.GradeRepository;
@@ -14,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import static com.example.unispring.util.MessageHelper.*;
 

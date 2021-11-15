@@ -19,7 +19,7 @@ public interface ReportSheetRepository extends CrudRepository<ReportSheet, Long>
                 "INNER JOIN applicants ON applicant_id = applicants.id " +
                 "INNER JOIN users ON applicants.users_id = users.id " +
                 "WHERE faculty_id = ? " +
-                "ORDER BY blocked ASC , `total_sum` DESC")
+                "ORDER BY blocked, `total_sum` DESC")
     List<ReportSheet> computeAllByFacultyId(Long id);
 
     List<ReportSheet> getAllByFacultyIdEquals(Long id);

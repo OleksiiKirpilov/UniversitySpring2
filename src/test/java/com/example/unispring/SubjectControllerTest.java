@@ -43,10 +43,8 @@ class SubjectControllerTest {
 
     @Test
     void shouldViewSubject() {
-        HttpServletRequest request = mock(HttpServletRequest.class);
         ModelMap map = mock(ModelMap.class);
-        List<Subject> subjects = new ArrayList<>();
-        subjectRepository.findAll().forEach(subjects::add);
+        List<Subject> subjects = new ArrayList<>(subjectRepository.findAll());
         Subject subject = subjects.get(0);
         String result = subjectController.viewSubject(subject.getNameEn(), map);
         Assertions.assertEquals(Path.FORWARD_SUBJECT_VIEW_ADMIN, result);

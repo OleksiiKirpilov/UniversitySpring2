@@ -2,7 +2,6 @@ package com.example.unispring.controllers;
 
 import com.example.unispring.services.ApplicantService;
 import com.example.unispring.util.Path;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ApplicantController {
 
-    @Autowired
-    private ApplicantService applicantService;
+    private final ApplicantService applicantService;
+
+    public ApplicantController(ApplicantService applicantService) {
+        this.applicantService = applicantService;
+    }
 
     @GetMapping("/viewApplicant")
     public String viewApplicantPage(@RequestParam Long userId,

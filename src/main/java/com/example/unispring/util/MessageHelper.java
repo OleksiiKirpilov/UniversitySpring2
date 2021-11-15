@@ -22,10 +22,6 @@ public final class MessageHelper {
         setMessage(session, "errorMessage", messageKey);
     }
 
-    public static void setOkMessage(HttpServletRequest request, String messageKey) {
-        setMessage(request, "successfulMessage", messageKey);
-    }
-
     public static void setOkMessage(HttpSession session, String messageKey) {
         setMessage(session, "successfulMessage", messageKey);
     }

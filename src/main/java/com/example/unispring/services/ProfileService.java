@@ -9,7 +9,6 @@ import com.example.unispring.util.Fields;
 import com.example.unispring.util.InputValidator;
 import com.example.unispring.util.Path;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -34,11 +33,13 @@ public class ProfileService {
     private static final String USER_ROLE = "userRole";
     private static final String USER = "user";
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final ApplicantRepository applicantRepository;
 
-    @Autowired
-    private ApplicantRepository applicantRepository;
+    public ProfileService(UserRepository userRepository, ApplicantRepository applicantRepository) {
+        this.userRepository = userRepository;
+        this.applicantRepository = applicantRepository;
+    }
 
 
     public String login(String email, String password, HttpSession session) {

@@ -38,7 +38,7 @@ class ApplicantControllerTest {
         ModelMap map = mock(ModelMap.class);
         User user = userRepository.findByEmail("ivanov@gmail.com");
         Applicant ap = applicantRepository.findByUserId(user.getId());
-        String result = applicantController.viewApplicant(ap.getId());
+        String result;
         result = applicantController.viewApplicant(ap.getId());
         Assertions.assertEquals(Path.REDIRECT_APPLICANT_PROFILE + ap.getUserId(), result);
         result = applicantController.viewApplicantPage(user.getId(), map);

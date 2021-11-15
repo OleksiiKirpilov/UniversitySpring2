@@ -68,7 +68,6 @@ class FacultyControllerTest {
         HttpSession session = mock(HttpSession.class);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(session.getAttribute("userRole")).thenReturn("admin");
-        ModelMap map = mock(ModelMap.class);
         Faculty faculty = new Faculty("Тестовый факультет", "Test faculty", 1, 2);
         Long[] subjects = new Long[1];
         subjects[0] = 1L;

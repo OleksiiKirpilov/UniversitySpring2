@@ -2,7 +2,6 @@ package com.example.unispring.controllers;
 
 import com.example.unispring.model.Role;
 import com.example.unispring.model.User;
-import com.example.unispring.repository.ApplicantRepository;
 import com.example.unispring.repository.UserRepository;
 import com.example.unispring.services.ApplicantService;
 import com.example.unispring.services.ProfileService;
